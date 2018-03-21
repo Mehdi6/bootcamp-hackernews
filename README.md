@@ -1,28 +1,47 @@
-# AllauthProject
+# django-reactJs
+This web application is intended to training purposes, in the context of a bootcamp, it implements a clone of the hacker news (website)[https://news.ycombinator.com/]
 
-A ready-made project for social logins with custom user model.
+## Backend: Django/ PostgreSQL
 
-## Features
+Tools:
+- django 1.10
+- python 3.6
+- django-allauth 0.31.0
+- psycopg2 2.7.4
+- etc (check requirements.txt for more details)
 
-- Login with Facebook and Google+.
-- Custom User model.
+How it works:
 
-## How to Use
+- Install python version 3.6, together with [pip](https://pip.pypa.io/en/stable/installing/) and [virtualenv](https://virtualenv.pypa.io/en/stable/installation/).
+- Clone the repository from my [github](https://github.com/Mehdi6/bootcamp-hackernews), and place it in a new folder.
+- Install a virtualenv:
+    run the command line, place yourself inside the project's folder, then create your new virtualenv.
+    Install the requirements by running the following command line: `pip install -r requirements.txt`
 
-To use this project, follow these steps:
+- Run the server
+(1) First run the command : `python manage.py migrate`
+(2) Then: `python manage.py runserver`
+(3) The server is now running on http://localhost:8000/
 
-1. Create your working environment.
-2. Install requirements (`pip install -r requirements.txt`)
-3. Runserver (`python manage.py runserver`)
+## Frontend:
 
+Tools:
 
-## Deployment to Heroku
+- jQuery
+- bootstrap 4
+- CSS3
+- HTML5
 
-    $ git init
-    $ git add -A
-    $ git commit -m "Initial commit"
+## What do I need to know to test the web application?
 
-    $ heroku create
-    $ git push heroku master
+## Issue Reporting
 
-    $ heroku run python manage.py migrate
+If you have found a bug or feature request, please report them at the repository issues section.
+
+## License
+
+MIT
+
+## Acknowledgements
+
+Thanks to the quick starting [project](https://github.com/pyaf/allauthproject) by Rishabh Agrahari that demonstrate very well how to use django-allauth lib to authenticate with social accounts.
