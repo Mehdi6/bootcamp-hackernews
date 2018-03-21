@@ -46,8 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.google',
-
+    #'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.twitter',
+    'sslserver',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -83,7 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'allauthproject.wsgi.application'
 
-SITE_ID = 1
+SITE_ID = 3
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
@@ -133,7 +134,7 @@ ACCOUNT_FORMS = {
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
+        'SCOPE': ['email', 'public_profile', 'user_friends'],
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
         'FIELDS': [
             'id',
@@ -150,6 +151,7 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'EXCHANGE_TOKEN': True,
         # 'LOCALE_FUNC': '',
+        #'LOCALE_FUNC': lambda request: 'kr_KR',
         'VERIFIED_EMAIL': False,
         'VERSION': 'v2.4',
     }
@@ -172,7 +174,7 @@ DATABASES['default'].update(db_from_env)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
@@ -184,3 +186,4 @@ STATIC_URL = '/static/'
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+

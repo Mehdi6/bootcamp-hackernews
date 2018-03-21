@@ -5,5 +5,4 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('allauth.urls')),
     url(r'^', include('users.urls')),
-
-]
+   ]
