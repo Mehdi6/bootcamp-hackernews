@@ -1,5 +1,5 @@
 # django-reactJs
-This web application is intended to training purposes, in the context of a bootcamp, it implements a clone of the hacker news (website)[https://news.ycombinator.com/]
+This web application is intended to training purposes, in the context of a bootcamp, it implements a clone of the hacker news [website](https://news.ycombinator.com/)
 
 ## Backend: Django/ PostgreSQL
 

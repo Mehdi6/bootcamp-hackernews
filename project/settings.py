@@ -1,13 +1,3 @@
-"""
-Django settings for allauthproject project on Heroku. For more info, see:
-https://github.com/heroku/heroku-django-template
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.10/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.10/ref/settings/
-"""
 
 import os
 import dj_database_url
@@ -28,6 +18,7 @@ DEBUG = True
 
 INSTALLED_APPS = [
     'users',
+    'services',
 
     'allauth',
     'allauth.account',
@@ -47,8 +38,9 @@ INSTALLED_APPS = [
 
     'allauth.socialaccount.providers.facebook',
     #'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.twitter',
-    'sslserver',
+    'sslserver', # A useful lib to enable https request
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -63,7 +55,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'allauthproject.urls'
+ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
@@ -82,17 +74,23 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'allauthproject.wsgi.application'
+WSGI_APPLICATION = 'project.wsgi.application'
 
-SITE_ID = 3
+# You have to specify the site id that is attributed to the site attached to
+# the social account
+SITE_ID = 4
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'bootcamp',
+            'USER': 'postgres',
+            'PASSWORD': 'postgres',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -151,7 +149,6 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'EXCHANGE_TOKEN': True,
         # 'LOCALE_FUNC': '',
-        #'LOCALE_FUNC': lambda request: 'kr_KR',
         'VERIFIED_EMAIL': False,
         'VERSION': 'v2.4',
     }
