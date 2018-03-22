@@ -1,7 +1,8 @@
-from django.views.generic import CreateView, ListView, View
+from django.views.generic import CreateView, ListView, View, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .models import Topic
+from .models import Topic, Comment
+from django.core.exceptions import ValidationError
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
@@ -20,9 +21,21 @@ class TopicCreateView(CreateView):
         return super().form_valid(form)
 
 
-class TopicDetailView(View):
-    
-    pass
+class TopicDetailView(TemplateView):
+    template_name = 'services/topic_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        topics = Topic.objects.filter(id = self.kwargs['id'])
+        if len(topics) == 0:
+            raise ValidationError('The given topic id is not valid.')
+
+        topic = topics[0]
+        context['topic'] = topic
+        context['comments'] = Comment.objects.filter(topic=topic).order_by('created_at')
+
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class TopicUpvoteView(View):
