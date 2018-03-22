@@ -1,14 +1,7 @@
-from django.shortcuts import render, HttpResponse, redirect
-from django.views.generic import CreateView, ListView
-from django.views.generic import View
-from django.contrib.auth import authenticate, login
+from django.views.generic import CreateView, ListView, View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
-import json
-from .forms import TopicForm
-from .models import Topic, Comment
+from .models import Topic
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
@@ -26,12 +19,19 @@ class TopicCreateView(CreateView):
 
         return super().form_valid(form)
 
-# Simple Topic view to List created topics
-class TopicListView(ListView):
-    model = Topic
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
+class TopicDetailView(View):
     
+    pass
+
+@method_decorator(login_required, name='dispatch')
+class TopicUpvoteView(View):
+    pass
+
+@method_decorator(login_required, name='dispatch')
+class CommentCreateView(View):
+    pass
+
+@method_decorator(login_required, name='dispatch')
+class CommentUpvoteView(View):
+    pass
