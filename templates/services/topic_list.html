@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Topics</h1>
+    <ul>
+    {% for topic in object_list %}
+        <li>{{ topic.created_at|date }} - <a href="{{ topic.url }}">{{ topic.title }}</a> - {{ topic.text }}</li>
+    {% empty %}
+        <li>No topic yet.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

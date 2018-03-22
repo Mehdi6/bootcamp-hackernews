@@ -17,9 +17,6 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
-    'users',
-    'services',
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -35,12 +32,18 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-
+    # social accounts authentication services
     'allauth.socialaccount.providers.facebook',
     #'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.twitter',
+
     'sslserver', # A useful lib to enable https request
+
+    # Project's apps
+    'users',
+    'services',
+    'crispy_forms',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -122,7 +125,8 @@ AUTH_USER_MODEL = 'users.User'
 ACCOUNT_USERNAME_REQUIRED = True
 # ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_QUERY_EMAIL = True
-LOGIN_REDIRECT_URL = "/dashboard/"
+LOGIN_URL = "/login"
+LOGIN_REDIRECT_URL = "/"
 ACCOUNT_EMAIL_REQUIRED=False
 ACCOUNT_USERNAME_REQURIED=True
 ACCOUNT_AUTHENTICATION_METHOD = 'username'

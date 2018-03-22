@@ -1,46 +1,26 @@
 from django import forms
-from django.conf import settings
 from django.utils.translation import ugettext as _
-from django.contrib.auth.password_validation import validate_password
 
-from .models import User
+from .models import Topic, Comment
 
 
 class TopicForm(forms.ModelForm):
-    phone_number = forms.IntegerField(required=True)
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
-    country_code = forms.IntegerField()
-
-    MIN_LENGTH = 4
+    title = forms.CharField(required=True)
+    url = forms.URLField()
+    text = forms.CharField(min_length=50, widget=forms.Textarea)
 
     class Meta:
-        model = User
-        fields = ['username', 'email', 'country_code',
-                    'phone_number', 'password1', 'password2', 'full_name' ]
+        model = Topic
+        fields = ['title', 'url', 'text']
 
-    def clean_username(self):
-        username = self.data.get('username')
-        return username
-
-    def clean_password1(self):
-        password = self.data.get('password1')
-        validate_password(password)
-        if password != self.data.get('password2'):
-            raise forms.ValidationError(_("Passwords do not match"))
-        return password
-
-    def clean_phone_number(self):
-        phone_number = self.data.get('phone_number')
-        # print(User.objects.filter(phone_number=phone_number))
-        if User.objects.filter(phone_number=phone_number).exists():
-            raise forms.ValidationError(
-                _("Another user with this phone number already exists"))
-        return phone_number
+    def clean_title(self):
+        # add some contraints to validate the title
+        title = self.data.get('title')
+        return title
 
     def save(self, *args, **kwargs):
-        user = super(RegisterForm, self).save(*args, **kwargs)
-        user.set_password(self.cleaned_data['password1'])
-        print('Saving user with country_code', user.country_code)
-        user.save()
-        return user
+        topic = super(TopicForm, self).save(*args, **kwargs)
+
+        #print('Saving topic')
+        #topic.save()
+        return topic

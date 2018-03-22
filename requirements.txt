@@ -10,3 +10,4 @@ requests==2.13.0
 requests-oauthlib==0.8.0
 whitenoise==3.2
 django-sslserver==0.20
+django-crispy-forms==1.7.0
