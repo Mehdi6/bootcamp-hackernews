@@ -3,7 +3,7 @@ This web application is intended to training purposes, in the context of a bootc
 
 ## Backend: Django/ PostgreSQL
 
-Tools:
+Technologies:
 - django 1.9
 - python 3.6
 - django-allauth 0.31.0
@@ -25,7 +25,7 @@ How it works:
 
 ## Frontend:
 
-Tools:
+Technologies:
 
 - jQuery
 - bootstrap 3.7.3
