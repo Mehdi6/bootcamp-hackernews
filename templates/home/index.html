@@ -26,7 +26,7 @@
                       <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
                       <td class="votelinks" valign="top" style="padding-right: 10px">
-                      <center><a id="up_{{topic.id}}" href="{% url 'services:topic_upvote' topic.id %}">
+                      <center><a class="upvoteme" id="up_{{topic.id}}" href="#">
                           <div class="fa fa-chevron-up" title="upvote"></div></a>
                       </center></td>
                       <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow">{{ topic.title }}</a>
@@ -47,6 +47,7 @@
 
     </div>
     </div>
+    </div>
 
 
 {% endblock %}
@@ -55,5 +56,22 @@
 {% block javascript %}
     {{ block.super }}
   <!-- Additional JS to add here -->
+    <script>
+    $(".upvoteme").click(function() {
+        console.log("Hello")
+        var topic_id = $(this).attr("id")
+        console.log(topic_id)
+        $.ajax({
+            url: 'https://localhost:8000/services/topic/upvote/'+topic.,
+            type: 'get',
+            success: function(data) {
+                alert(data);
+            },
+            failure: function(data) {
+                alert('Got an error dude');
+            }
+        }
+        });
+      </script>
 
 {% endblock %}

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import Topic, Comment
 from django.core.exceptions import ValidationError
+from django.shortcuts import HttpResponse
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
@@ -40,6 +41,11 @@ class TopicDetailView(TemplateView):
 @method_decorator(login_required, name='dispatch')
 class TopicUpvoteView(View):
     pass
+
+@login_required
+def upvote_topic(request):
+    print(request['id'])
+    return HttpResponse('Hello my dear!')
 
 @method_decorator(login_required, name='dispatch')
 class CommentCreateView(View):
