@@ -29,7 +29,7 @@ class TopicCreateView(CreateView):
 
 
 class TopicDetailView(TemplateView):
-    template_name = 'services/comment_list.html'
+    template_name = 'services/topic_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -64,7 +64,7 @@ def upvote_topic(request):
 
 @method_decorator(login_required, name='dispatch')
 class CommentCreateView(View):
-    template_name = "services/comment_list.html"
+    template_name = "services/topic_detail.html"
     form_class = CommentForm
 
     def post(self, request, *args, **kwargs):
