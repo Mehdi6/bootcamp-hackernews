@@ -6,6 +6,7 @@
     {{ block.super }}
 
     <!-- Additional CSS to add here -->
+    <!-- <link href="{% static 'css/project.css' %}" rel="stylesheet">-->
 
 {% endblock %}
 
@@ -27,9 +28,9 @@
 
                       <td class="votelinks" valign="top" style="padding-right: 10px">
                       <center><a class="upvoteme" id="up_{{topic.id}}" href="#">
-                          <div class="fa fa-chevron-up" title="upvote"></div></a>
+                          <div class="fa fa-caret-up" title="upvote"></div></a>
                       </center></td>
-                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow">{{ topic.title }}</a>
+                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h4>{{ topic.title }}</h4></a>
                       </td></tr>
 
                   <tr><td colspan="2"></td>

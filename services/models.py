@@ -3,6 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from users.models import User
 
+from mptt.models import MPTTModel, TreeForeignKey
+
 
 class Topic(models.Model):
     title = models.CharField(_('title'), max_length=200, blank=False, null=False)
@@ -16,16 +18,31 @@ class Topic(models.Model):
     upvotes = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
 
-class Comment(models.Model):
-    content = models.TextField(_('content'), max_length=2000, blank=False, null=False)
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return reverse('home')
 
-    comment_parent = models.ForeignKey('self', related_name="child_comment",
-                                       verbose_name="Comment", on_delete=models.CASCADE)
+    def __str__(self):
+        return "ID={} Title={} url={} text={} comment_count={}".format(
+                            self.id, self.title, self.url, self.text, self.comment_count)
+
+
+class Comment(MPTTModel):
+    class MPTTMeta:
+        order_insertion_by = ['created_at']
+
+    content = models.TextField(_('content'), max_length=2000, blank=False, null=False)
+    parent = TreeForeignKey('self', related_name="child_comment",
+                                       verbose_name="Comment", blank=True, db_index=True, null=True)
+    media = models.URLField(blank=True, null=True)
     user = models.ForeignKey(User, related_name="comment",
                                        verbose_name="user", on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, related_name="topic",
-                             verbose_name="Topic", on_delete=models.CASCADE)
+                                    verbose_name="Topic", on_delete=models.CASCADE)
     created_at = models.DateField(_("created_at"), auto_now=True)
+
+    def __str__(self):
+        return "ID={} Content={} user={} topic={} subcomments_count={}".format(self.id, self.content, self.user, self.topic, self.get_descendant_count())
 
 
 class UpVoteComment(models.Model):
