@@ -7,7 +7,15 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        topics = Topic.objects.all().order_by("created_at")
+        topics = Topic.objects.all()
+
+        sort_by = self.request.GET.get("sortBy")
+        if sort_by == 'recent':
+            topics = topics.order_by('created_at')
+            print('recent')
+        elif sort_by == 'rate':
+            print('rated')
+            topics = topics.order_by('-up_votes')
 
         user = self.request.user
         #print(user)

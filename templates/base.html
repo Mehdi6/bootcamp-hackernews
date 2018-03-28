@@ -44,7 +44,17 @@
             </ul>
                 {% if request.user.is_authenticated %}
                 <ul class="nav navbar-nav navbar-right">
-                  <li class="nav-item">
+                    {% if topic_list %}
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sort topics by <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                          <li><a href="/?sortBy=recent">Most recent</a></li>
+                          <li><a href="/?sortBy=rate">Most rated</a></li>
+                        </ul>
+                      </li>
+                    {% endif %}
+
+                    <li class="nav-item">
                     <a class="nav-link" href="{% url 'services:create_topic' %}">{% trans "Add Topic" %}</a>
                   </li>
                   <li class="nav-item">

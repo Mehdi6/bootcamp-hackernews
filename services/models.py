@@ -10,7 +10,7 @@ class Topic(models.Model):
     title = models.CharField(_('title'), max_length=200, blank=False, null=False)
     url = models.URLField(blank=False, null=False)
     text = models.CharField(_('text'), max_length=200, blank=False, null=False)
-    created_at = models.DateField(_("created_at"), auto_now=True)
+    created_at = models.DateTimeField(_("created_at"), auto_now=True)
 
     user = models.ForeignKey(User, related_name="topic",
                                   verbose_name="User",on_delete=models.CASCADE)
