@@ -15,7 +15,7 @@ class Topic(models.Model):
     user = models.ForeignKey(User, related_name="topic",
                                   verbose_name="User",on_delete=models.CASCADE)
 
-    upvotes = models.IntegerField(default=0)
+    up_votes = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
 
     def get_absolute_url(self):
@@ -39,6 +39,8 @@ class Comment(MPTTModel):
                                        verbose_name="user", on_delete=models.CASCADE)
     topic = models.ForeignKey(Topic, related_name="topic",
                                     verbose_name="Topic", on_delete=models.CASCADE)
+    up_votes = models.IntegerField(default=0)
+
     created_at = models.DateField(_("created_at"), auto_now=True)
 
     def __str__(self):

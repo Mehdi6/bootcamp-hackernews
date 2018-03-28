@@ -25,20 +25,23 @@
                       <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
                       <td class="votelinks" valign="top" style="padding-right: 10px">
-                      <center><a id="up_{{topic.id}}" href="{% url 'services:topic_upvote' topic.id %}">
-                          <div class="fa fa-caret-up" title="upvote"></div></a>
-                      </center></td>
-                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h4>{{ topic.title }}</h4></a>
+                      {% if not topic.up_voted and user.username != ''%}
+                          <center><a class="upvote_topic" id="up_{{topic.id}}" href="javascript:void(0)">
+                              <div class="fa fa-caret-up" title="upvote"></div></a>
+                          </center></td>
+                      {% endif %}
+
+                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h3>{{ topic.title }}</h3></a>
                       </td></tr>
 
                   <tr><td colspan="2"></td>
                       <td class="subtext">
-                        <span class="score" id="score_{{topic_id}}">{{ topic.upvotes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
+                        <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
                         <span class="age"><a href="services/topic/{{ topic.id }}/">{{ topic.created_at | date }}</a></span>
-                      | <a href="">{{ topic.comment_count }}&nbsp;comment</a>
+                      | <a href="services/topic/{{ topic.id }}/">{{ topic.comment_count }}&nbsp;comment</a>
                       </td>
                   </tr>
-                <tr class="spacer" style="height:20px"></tr>
+                <tr class="spacer" style="height:5px"></tr>
               </tbody>
             </table>
         </div>
@@ -73,10 +76,10 @@
                               </p>
 
                               <a class="btn btn-info btn-circle text-uppercase reply" data-toggle="modal" data-target="#exampleModal" comment_id="{{ node.id }}" href="#"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
-                              <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#reply{{node.id}}"><span class="glyphicon glyphicon-comment"></span> {{ node.subcomment_count }} comments</a>
-                              <a id="up_{{node.id}}" style="font-size:2em;" href="{% url 'services:comment_upvote' node.id %}">
-                                  <div class="pull-right fa fa-thumbs-up" title="upvote"></div>
-                              </a>
+                              {% if node.subcomment_count > 0 %}<a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#reply{{node.id}}"><span class="glyphicon glyphicon-comment"></span> {{ node.subcomment_count }} comments</a>{% endif %}
+                              <div id="cscore_{{node.id}}" style="font-size:1em;" class="upvote_comment pull-right">
+                                  {% if not node.up_voted and user.username != '' %}<button class="fa fa-thumbs-up" title="upvote"></button> {% endif %}<span upvotes="{{ node.up_votes }}">({{ node.up_votes }})</span>
+                              </div>
                           </div>
                         </div>
                       {% if not node.is_leaf_node %}
@@ -174,9 +177,10 @@
 
 {% block javascript %}
     {{ block.super }}
-    <script>
-    console.log("Hello!")
 
+    <!-- Additional JS to add here -->
+    <script src="{% static 'js/upvotes.js' %}"></script>
+    <script>
     $(document).ready(function() {
         $(".reply").click(function() {
             $("#comment_parent").val($(this).attr('comment_id'))

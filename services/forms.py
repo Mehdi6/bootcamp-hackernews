@@ -1,5 +1,4 @@
 from django import forms
-from django.utils.translation import ugettext as _
 
 from .models import Topic, Comment
 
@@ -21,8 +20,6 @@ class TopicForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         topic = super(TopicForm, self).save(*args, **kwargs)
 
-        #print('Saving topic')
-        #topic.save()
         return topic
 
 
@@ -33,7 +30,7 @@ class CommentForm(forms.ModelForm):
 
     class Meta:
         model = Comment
-        fields = []#['content', 'media', 'parent']
+        fields = []
 
     def clean_comment_content(self):
         # add some constraints to validate the title

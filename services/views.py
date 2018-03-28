@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from services.forms import CommentForm
-from .models import Topic, Comment
+from .models import Topic, Comment, UpVoteTopic, UpVoteComment
 from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse, redirect
 from django.core.urlresolvers import reverse
@@ -39,7 +39,25 @@ class TopicDetailView(TemplateView):
             raise ValidationError('The given topic id is not valid.')
 
         topic = topics[0]
-        comments = Comment.objects.filter(topic=topic)#.order_by("-created_at")
+        comments = Comment.objects.filter(topic=topic)
+
+        user = self.request.user
+        if user.username != '':
+            ups = UpVoteTopic.objects.filter(user=user, topic=topic)
+            # If a user has upvoted the topic before, we add a variable
+            # upvoted in order to hide he upvote carot on the template
+            if len(ups) != 0:
+                topic.up_voted = True
+
+            for cmt in comments:
+                cmt.up_voted = False
+                cmt.subcomment_count = cmt.get_descendant_count()
+                ups = UpVoteComment.objects.filter(user= user, comment=cmt)
+                # If a user has upvoted the topic before, we add a variable
+                # upvoted in order to hide he upvote carot on the template
+                if len(ups) != 0:
+                    cmt.up_voted = True
+
         context['topic'] = topic
         context['comments'] = comments
         msg = self.request.GET.get("message")
@@ -53,14 +71,55 @@ class TopicDetailView(TemplateView):
 
         return context
 
-@method_decorator(login_required, name='dispatch')
-class TopicUpvoteView(View):
-    pass
+@login_required
+def upvote_topic(request, id):
+    # validating the id first:
+    topics = Topic.objects.filter(id=id)
+    msg = 's'
+    if len(topics) == 0:
+        # flag error
+        msg = 'e'
+    
+    topic = topics[0]
+    user = request.user
+    
+    # we check if the user has already upvoted the topic
+    ups = UpVoteTopic.objects.filter(topic=topic, user=user)
+    if len(ups) != 0:
+        msg = 'e'
+    else:
+        up_vote = UpVoteTopic(topic=topic, user=user)
+        up_vote.save()
+        # we increment the number of up_votes on the topic
+        topic.up_votes += 1
+        topic.save()
+    return HttpResponse(msg)
+
 
 @login_required
-def upvote_topic(request):
-    print(request['id'])
-    return HttpResponse('Hello my dear!')
+def upvote_comment(request, id):
+    # validating the id first:
+    comments = Comment.objects.filter(id=id)
+    msg = 's'
+    if len(comments) == 0:
+        # flag error
+        msg = 'e'
+
+    comment = comments[0]
+    user = request.user
+
+    # we check if the user has already upvoted the topic
+    ups = UpVoteComment.objects.filter(comment=comment, user=user)
+    if len(ups) != 0:
+        msg = 'e'
+    else:
+        up_vote = UpVoteComment(comment=comment, user=user)
+        up_vote.save()
+        # we increment the number of up_votes on the topic
+        comment.up_votes += 1
+        comment.save()
+
+    return HttpResponse(msg)
 
 @method_decorator(login_required, name='dispatch')
 class CommentCreateView(View):
@@ -120,6 +179,3 @@ class CommentCreateView(View):
                     urllib.parse.urlencode({'message':success_msg, 'tag':'s'})
                         ))
 
-@method_decorator(login_required, name='dispatch')
-class CommentUpvoteView(View):
-    pass
