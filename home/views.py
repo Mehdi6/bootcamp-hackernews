@@ -12,13 +12,13 @@ class IndexView(TemplateView):
         sort_by = self.request.GET.get("sortBy")
         if sort_by == 'recent':
             topics = topics.order_by('created_at')
-            print('recent')
+            #print('recent')
         elif sort_by == 'rate':
-            print('rated')
+            #print('rated')
             topics = topics.order_by('-up_votes')
 
         user = self.request.user
-        #print(user)
+        ##print(user)
         if user.username != '':
             for tpc in topics:
                 ups = UpVoteTopic.objects.filter(user= user, topic=tpc)
