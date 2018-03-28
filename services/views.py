@@ -44,7 +44,7 @@ class TopicUpvoteView(View):
 
 @login_required
 def upvote_topic(request):
-    print(request['id'])
+    #print(request['id'])
     return HttpResponse('Hello my dear!')
 
 @method_decorator(login_required, name='dispatch')
