@@ -14,9 +14,6 @@ from django.contrib import messages
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
 class TopicCreateView(CreateView):
-    #template_name = 'services/topic_form.html'
-    #form_class = TopicForm
-    #success_url = 'topic_added.html'
     model = Topic
     fields = ['title', 'text', 'url']
 
