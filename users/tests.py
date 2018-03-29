@@ -44,3 +44,9 @@ class UserTestCase(TestCase):
     def doCleanups(self):
         self.new_user.delete()
         self.superuser.delete()
+
+    def test_facebook_authentication(self):
+        username = 'backendtestemail@gmail.com'
+        password = '$AppleTuringTest$'
+
+        
