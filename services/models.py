@@ -13,6 +13,8 @@ class Topic(models.Model):
     user = models.ForeignKey(User, related_name="topic",
                                   verbose_name="User",on_delete=models.CASCADE)
 
+    upvotes = models.IntegerField(default=0)
+    comment_count = models.IntegerField(default=0)
 
 class Comment(models.Model):
     content = models.TextField(_('content'), max_length=2000, blank=False, null=False)

@@ -1,14 +1,31 @@
 from django.conf.urls import url
-from django.contrib import admin
-from django.contrib.auth.views import logout
-from .views import TopicCreateView, TopicListView
+from .views import (TopicCreateView, TopicDetailView, TopicUpvoteView,
+                    CommentUpvoteView, CommentCreateView, upvote_topic)
 
 urlpatterns = [
-    #url(r'^$', IndexView.as_view(), name="register_url"),
-    #url(r'^login/', LoginView.as_view(), name="login_url"),
-    # url(r'^verify/$', PhoneVerificationView.as_view(), name="phone_verification_url"),
-    #url(r'^dashboard/$', DashboardView.as_view(), name="dashboard_url"),
-    # url(r'^logout/$', logout, {'next_page': '/'})
-    url(r'^topic/add/$', TopicCreateView.as_view(), name="create_topic"),
-    url(r'^topic/list/$', TopicListView.as_view(), name="list_topic")
+    url(
+        regex=r'^topic/add/$',
+        view=TopicCreateView.as_view(),
+        name="create_topic"
+        ),
+    url(
+        regex=r'^topic/upvote/(?P<id>\d+)/$',
+        view=upvote_topic,
+        name="topic_upvote"
+        ),
+    url(
+        regex=r'^topic/(?P<id>\d+)/$',
+        view=TopicDetailView.as_view(),
+        name="topic_detail"
+        ),
+    url(
+        regex=r'^comment/add/(?P<id>\d+)/$',
+        view=CommentCreateView.as_view(),
+        name="create_comment"
+        ),
+    url(
+        regex=r'^comment/upvote/(?P<id>\d+)/$',
+        view=CommentUpvoteView.as_view(),
+        name="comment_upvote"
+        ),
 ]

@@ -1,10 +1,10 @@
-# django-reactJs
+# Django (Hacker-news clone)
 This web application is intended to training purposes, in the context of a bootcamp, it implements a clone of the hacker news [website](https://news.ycombinator.com/)
 
 ## Backend: Django/ PostgreSQL
 
-Tools:
-- django 1.10
+Technologies:
+- django 1.9
 - python 3.6
 - django-allauth 0.31.0
 - psycopg2 2.7.4
@@ -20,15 +20,15 @@ How it works:
 
 - Run the server
 (1) First run the command : `python manage.py migrate`
-(2) Then: `python manage.py runserver`
-(3) The server is now running on http://localhost:8000/
+(2) Then: `python manage.py runsslserver`
+(3) The server is now running on https://localhost:8000/
 
 ## Frontend:
 
-Tools:
+Technologies:
 
 - jQuery
-- bootstrap 4
+- bootstrap 3.7.3
 - CSS3
 - HTML5
 
