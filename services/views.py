@@ -11,6 +11,9 @@ from django.shortcuts import HttpResponse, redirect
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
+import logging
+logger = logging.getLogger(__name__)
+
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
 class TopicCreateView(CreateView):
@@ -134,7 +137,7 @@ class CommentCreateView(View):
         # Validation of comment data
         additional_errors = []
         if form.is_valid():
-            #print("Form is valid!")
+            logger.info("Form is valid!")
             # validate topic id
             topics = Topic.objects.filter(id=topic)
             if len(topics) == 0:
@@ -153,8 +156,8 @@ class CommentCreateView(View):
             if len(additional_errors) == 0:
                 new_comment = Comment(content=content, media=media, topic=tpc, user=user, parent=parent)
                 new_comment.save()
-                #print(new_comment)
-                #print(tpc)
+                logger.info(new_comment)
+                logger.info(tpc)
                 # new comment added
                 tpc.comment_count +=1
                 tpc.save()
@@ -163,7 +166,7 @@ class CommentCreateView(View):
             msg_errors = form.errors.values()
             msg_errors = "\n".join([str(msg) for msg in msg_errors] + additional_errors)
 
-            ##print(msg_errors)
+            logger.info(msg_errors)
             return redirect("{}?{}".format(
                     reverse('services:topic_detail', args=[topic]),
                     urllib.parse.urlencode(

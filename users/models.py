@@ -8,6 +8,9 @@ from django.db.models.signals import post_save
 from allauth.socialaccount.models import SocialAccount
 from .manager import UserManager
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(_('username'), max_length=130, unique=True)
@@ -37,7 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 def save_profile(instance, **kwargs):
-    #print(instance)
+    logger.info(instance)
     instance.user.full_name = instance.extra_data['name']
     instance.user.profile_picture = instance.get_avatar_url()
     instance.user.save()

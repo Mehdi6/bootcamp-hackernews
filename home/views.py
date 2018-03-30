@@ -1,6 +1,8 @@
 from django.views.generic import TemplateView
 from services.models import Topic, UpVoteTopic
 
+import logging
+logger = logging.getLogger(__name__)
 
 class IndexView(TemplateView):
     template_name = 'home/index.html'
@@ -12,13 +14,13 @@ class IndexView(TemplateView):
         sort_by = self.request.GET.get("sortBy")
         if sort_by == 'recent':
             topics = topics.order_by('created_at')
-            #print('recent')
+            logger.info('recent')
         elif sort_by == 'rate':
-            #print('rated')
+            logger.info('rated')
             topics = topics.order_by('-up_votes')
 
         user = self.request.user
-        ##print(user)
+        logger.info(user)
         if user.username != '':
             for tpc in topics:
                 ups = UpVoteTopic.objects.filter(user= user, topic=tpc)

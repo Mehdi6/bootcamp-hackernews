@@ -2,6 +2,8 @@ from django import forms
 
 from .models import Topic, Comment
 
+import logging
+logger = logging.getLogger(__name__)
 
 class TopicForm(forms.ModelForm):
     title = forms.CharField(required=True)
