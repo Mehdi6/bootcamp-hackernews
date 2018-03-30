@@ -4,6 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 
 from .models import User
 
+import logging
+logger = logging.getLogger(__name__)
 
 class RegisterForm(forms.ModelForm):
     password1 = forms.CharField(widget=forms.PasswordInput())
@@ -31,7 +33,7 @@ class RegisterForm(forms.ModelForm):
         # if email already exists, then send back validation error
         email = self.data.get('email')
         results = User.objects.filter(email=email)
-        #print(results)
+        logger.info(results)
         if len(results) != 0:
             raise forms.ValidationError(_("Email address already exists"))
 
@@ -40,7 +42,7 @@ class RegisterForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         user = super(RegisterForm, self).save(*args, **kwargs)
         user.set_password(self.cleaned_data['password1'])
-        #print('Saving user with country_code', user.country_code)
+        logger.info('Saving user with country_code', user.country_code)
         user.save()
         return user
 

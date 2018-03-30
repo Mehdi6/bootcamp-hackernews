@@ -5,6 +5,9 @@ from .models import Topic, Comment
 from django.core.exceptions import ValidationError
 from django.shortcuts import HttpResponse
 
+import logging
+logger = logging.getLogger(__name__)
+
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
 class TopicCreateView(CreateView):
@@ -44,7 +47,7 @@ class TopicUpvoteView(View):
 
 @login_required
 def upvote_topic(request):
-    #print(request['id'])
+    logger.info(request['id'])
     return HttpResponse('Hello my dear!')
 
 @method_decorator(login_required, name='dispatch')
