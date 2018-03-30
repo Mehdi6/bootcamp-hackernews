@@ -21,7 +21,7 @@
             <!-- listing topics here -->
             <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
               <tbody>
-              {% for topic in topic_list %}
+              {% for topic in pagination.object_list %}
                   <tr class="athing" id="16647565">
                       <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
@@ -44,10 +44,29 @@
                   </tr>
                 <tr class="spacer" style="height:5px"></tr>
               {% endfor %}
-
               </tbody>
             </table>
-
+            <div class="pagination-container">
+                <nav aria-label="..." >
+                  <ul class="pagination">
+                    <li class="page-item {%if not pagination.has_previous %} disabled {% endif %}">
+                      <a class="page-link" href="?page={{pagination.number|add:'-1'}}" tabindex="-1">Previous</a>
+                    </li>
+                    {% if pagination_ext.remain_left %}
+                        <li class="page-item"> <a class="page-link">...</a> </li>
+                    {% endif %}
+                    {% for p in pagination_ext.ex_range %}
+                        <li class="page-item {% if pagination.number == p %} active {% endif %}"><a class="page-link" href="?page={{p}}{% if sort_by %}&sortBy={{sort_by}} {% endif %}">{{p}}</a></li>
+                    {% endfor %}
+                    {% if pagination_ext.remain_right %}
+                        <li class="page-item"> <a class="page-link">...</a>  </li>
+                    {% endif %}
+                    <li class="page-item {%if not pagination.has_next %} disabled {% endif %}">
+                      <a class="page-link" href="?page={{pagination.number|add:'1'}}{% if sort_by %}&sortBy={{sort_by}} {% endif %}">Next</a>
+                    </li>
+                  </ul>
+                </nav>
+            </div>
     </div>
     </div>
     </div>
@@ -60,4 +79,6 @@
     {{ block.super }}
   <!-- Additional JS to add here -->
     <script src="{% static 'js/upvotes.js' %}"></script>
+    <script src="{% static 'js/pagination.js' %}"></script>
+
 {% endblock %}

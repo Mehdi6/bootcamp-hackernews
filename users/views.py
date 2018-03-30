@@ -8,6 +8,10 @@ import json
 from .forms import RegisterForm
 from .models import User
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 class RegisterView(SuccessMessageMixin, FormView):
     template_name = 'index.html'
     form_class = RegisterForm
@@ -19,7 +23,7 @@ class RegisterView(SuccessMessageMixin, FormView):
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
         user = form.save()
-        #print(self.request.POST['username'])
+        logger(self.request.POST['username'])
         username = self.request.POST['username']
         password = self.request.POST['password1']
         user = authenticate(username=username, password=password)
@@ -32,9 +36,10 @@ class RegisterView(SuccessMessageMixin, FormView):
                             data['message'])
             return redirect('/dashboard')
 
-        #print(response.status_code, response.reason)
-        #print(response.text)
+        logger(response.status_code, response.reason)
+        logger(response.text)
         return super().form_valid(form)
+
 
 class UserDetailView(DetailView):
     model = User

@@ -44,7 +44,6 @@ def create_topic(user):
 
 
 class TopicTestCase(TestCase):
-
     def setUp(self):
         self.new_user = create_user()
         self.superuser = create_superuser()
@@ -75,6 +74,20 @@ class TopicTestCase(TestCase):
         # required field is missing
         new_topic = Topic.objects.filter(url=self.topic.url)
         self.assertEqual(len(new_topic), 0)
+
+    def test_topic_length(self):
+        c = Client()
+        c.login(username="user", password='password')
+        url = reverse("services:create_topic", args=[self.topic.id])
+        media = "https://www.thisurlnew.com/"
+        title = "c"*201
+        text = "Some text to fill this Topic"
+
+        c.post(url, {'title':title, "media":media, "text": text})
+
+
+        # check that the comment wasn't added
+        result = Comment.objects.filter(media=media)
 
 
 def create_comment(topic, user):
@@ -139,6 +152,20 @@ class CommentTestCase(TestCase):
         # check if the new reply was successfully created
         reply = Comment.objects.filter(media=reply_on_comment.media, parent=reply_on_comment.parent)
         self.assertEqual(len(reply), 1)
+
+    def test_comment_length(self):
+        c = Client()
+        c.login(username="user", password='password')
+        url = reverse("services:create_comment", args=[self.topic.id])
+        media = "https://www.thisurlnew.com/"
+        content = "c"*2001
+        cmt = Comment(content=content, media=media, topic=self.topic, user=self.new_user)
+        c.post(url, {'content': cmt.content, "media": cmt.media})
+
+        # check that the comment wasn't added
+        result = Comment.objects.filter(media=media)
+
+        self.assertEqual(len(result), 0)
 
 
 class UpvoteTopicTestCase(TestCase):
