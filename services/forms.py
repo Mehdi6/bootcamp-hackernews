@@ -3,6 +3,9 @@ from django.utils.translation import ugettext as _
 
 from .models import Topic, Comment
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 class TopicForm(forms.ModelForm):
     title = forms.CharField(required=True)
@@ -21,7 +24,7 @@ class TopicForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         topic = super(TopicForm, self).save(*args, **kwargs)
 
-        ##print('Saving topic')
+        logger.info('Saving topic')
         #topic.save()
         return topic
 
