@@ -47,6 +47,10 @@ class Comment(MPTTModel):
     @property
     def up_votes(self):
         return UpVoteComment.objects.filter(comment=self).count()
+    
+    @property
+    def subcomment_count(self):
+        return self.get_descendant_count()
 
     created_at = models.DateField(_("created_at"), auto_now=True)
 

@@ -52,7 +52,6 @@ class TopicDetailView(TemplateView):
 
             for cmt in comments:
                 cmt.up_voted = False
-                cmt.subcomment_count = cmt.get_descendant_count()
                 ups = UpVoteComment.objects.filter(user=user, comment=cmt)
                 # If a user has upvoted the topic before, we add a variable
                 # upvoted in order to hide he upvote carot on the template
@@ -110,7 +109,6 @@ class CommentCreateView(View):
                 new_comment.save()
 
                 # new comment added
-                tpc.comment_count += 1
                 tpc.save()
 
         else:
