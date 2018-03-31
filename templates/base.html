@@ -35,10 +35,10 @@
             </div>
 
             <ul class="nav navbar-nav">
-                <li class="nav-item active">
+                <li class="nav-item {% ifequal navbar 'home' %} active {%endifequal%}">
                   <a class="nav-link" href="{% url 'home' %}">Home<span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item {% ifequal navbar 'about' %} active {%endifequal%}">
                   <a class="nav-link" href="{% url 'about' %}">About</a>
                 </li>
             </ul>
@@ -54,25 +54,34 @@
                   </li>
                 {% endif %}
 
-              <li class="nav-item">
+              <li class="nav-item {% ifequal navbar 'add_topic' %} active {%endifequal%}">
                 <a class="nav-link" href="{% url 'services:create_topic' %}">{% trans "Add Topic" %}</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item {% ifequal navbar 'profile' %} active {%endifequal%}">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item {% ifequal navbar 'logout' %} active {%endifequal%}">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
               </li>
             </ul>
             {% else %}
             <ul class="nav navbar-nav navbar-right">
-              <li class="nav-item">
+                {% if pagination %}
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sort topics by <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                      <li><a href="/?sortBy=recent">Most recent</a></li>
+                      <li><a href="/?sortBy=rate">Most rated</a></li>
+                    </ul>
+                  </li>
+                {% endif %}
+              <li class="nav-item {% ifequal navbar 'sign_up' %} active {%endifequal%}">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}"><span class="glyphicon glyphicon-user"></span>{% trans "Sign Up" %}</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item {% ifequal navbar 'sign_in' %} active {%endifequal%}">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}"><span class="glyphicon glyphicon-log-in"></span>{% trans "Sign In" %}</a>
               </li>

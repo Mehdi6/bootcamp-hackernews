@@ -84,9 +84,16 @@ class IndexView(TemplateView):
             context['page'] = pagination.num_pages
 
         context['pagination_ext'] = extend_pagination(context['pagination'], 2)
+        context['navbar'] = 'home'
 
         return context
 
 
 class AboutView(TemplateView):
     template_name = 'home/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['navbar'] = 'about'
+
+        return context

@@ -28,6 +28,10 @@ class TopicCreateView(CreateView):
 
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['navbar'] = 'add_topic'
+        return ctx
 
 class TopicDetailView(TemplateView):
     template_name = 'services/topic_detail.html'
@@ -68,6 +72,8 @@ class TopicDetailView(TemplateView):
                 messages.success(self.request, msg)
             elif tag == 'w':
                 messages.warning(self.request, msg)
+
+        context['navbar'] = 'home'
 
         return context
 
