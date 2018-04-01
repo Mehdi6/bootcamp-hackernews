@@ -36,7 +36,6 @@ class RegisterView(SuccessMessageMixin, FormView):
                             data['message'])
             return redirect('/dashboard')
 
-        logger.info(response.status_code, response.reason)
         logger.info(response.text)
         return super().form_valid(form)
 

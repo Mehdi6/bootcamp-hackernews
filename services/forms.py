@@ -23,9 +23,7 @@ class TopicForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         topic = super(TopicForm, self).save(*args, **kwargs)
-
         logger.info('Saving topic')
-        #topic.save()
         return topic
 
 
