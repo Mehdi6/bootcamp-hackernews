@@ -1,9 +1,18 @@
+import urllib
+
 from django.views.generic import CreateView, ListView, View, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+
+from services.forms import CommentForm
 from .models import Topic, Comment
 from django.core.exceptions import ValidationError
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse, redirect
+from django.core.urlresolvers import reverse
+from django.contrib import messages
+
+import logging
+logger = logging.getLogger(__name__)
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
@@ -33,8 +42,17 @@ class TopicDetailView(TemplateView):
             raise ValidationError('The given topic id is not valid.')
 
         topic = topics[0]
+        comments = Comment.objects.filter(topic=topic)#.order_by("-created_at")
         context['topic'] = topic
-        context['comments'] = Comment.objects.filter(topic=topic).order_by('created_at')
+        context['comments'] = comments
+        msg = self.request.GET.get("message")
+        tag = self.request.GET.get("tag")
+
+        if msg and tag:
+            if tag == 's':
+                messages.success(self.request, msg)
+            elif tag == 'w':
+                messages.warning(self.request, msg)
 
         return context
 
@@ -44,12 +62,66 @@ class TopicUpvoteView(View):
 
 @login_required
 def upvote_topic(request):
-    #print(request['id'])
+    logger.info(request['id'])
     return HttpResponse('Hello my dear!')
 
 @method_decorator(login_required, name='dispatch')
 class CommentCreateView(View):
-    pass
+    template_name = "services/topic_detail.html"
+    form_class = CommentForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        user = self.request.user
+        topic = kwargs['id']
+        content = request.POST.get("comment_content")
+        media = request.POST.get("comment_media")
+        parent = request.POST.get("comment_parent")
+
+        # Validation of comment data
+        additional_errors = []
+        if form.is_valid():
+            logger.info("Form is valid!")
+            # validate topic id
+            topics = Topic.objects.filter(id=topic)
+            if len(topics) == 0:
+                additional_errors.append("Topic id does not exists")
+            else:
+                tpc = topics[0]
+
+            if parent:
+                parent = Comment.objects.filter(id=parent)
+                if len(parent) == 0:
+                    additional_errors.append("Parent comment id does not exists!")
+                    parent = None
+                else:
+                    parent = parent[0]
+
+            if len(additional_errors) == 0:
+                new_comment = Comment(content=content, media=media, topic=tpc, user=user, parent=parent)
+                new_comment.save()
+                logger.info(new_comment)
+                logger.info(tpc)
+                # new comment added
+                tpc.comment_count +=1
+                tpc.save()
+
+        else:
+            msg_errors = form.errors.values()
+            msg_errors = "\n".join([str(msg) for msg in msg_errors] + additional_errors)
+
+            logger.info(msg_errors)
+            return redirect("{}?{}".format(
+                    reverse('services:topic_detail', args=[topic]),
+                    urllib.parse.urlencode(
+                        {'message': msg_errors, 'tag':'w'})
+                        ))
+
+        success_msg = "Comment added successfully"
+        return redirect("{}?{}".format(
+                    reverse('services:topic_detail', args=[topic]),
+                    urllib.parse.urlencode({'message':success_msg, 'tag':'s'})
+                        ))
 
 @method_decorator(login_required, name='dispatch')
 class CommentUpvoteView(View):
