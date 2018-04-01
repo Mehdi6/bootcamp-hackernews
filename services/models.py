@@ -20,7 +20,7 @@ class Topic(models.Model):
 
     @property
     def comment_count(self):
-        return Comment.objects.filter(topic=self).count()
+        return self.comments.count()
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
@@ -41,12 +41,12 @@ class Comment(MPTTModel):
     media = models.URLField(blank=True, null=True)
     user = models.ForeignKey(User, related_name="comment",
                              verbose_name="user", on_delete=models.CASCADE)
-    topic = models.ForeignKey(Topic, related_name="topic",
+    topic = models.ForeignKey(Topic, related_name="comments",
                               verbose_name="Topic", on_delete=models.CASCADE)
 
     @property
     def up_votes(self):
-        return UpVoteComment.objects.filter(comment=self).count()
+        return self.upvotes_comment.count()
     
     @property
     def subcomment_count(self):
