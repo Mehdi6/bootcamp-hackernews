@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(_('username'), max_length=130, unique=True)
-    full_name = models.CharField(_('full name'), max_length=130, blank=True)
-    email = models.EmailField(_('email id'), max_length=50, blank=True)
+    username = models.CharField(_('Username'), max_length=130, unique=True)
+    full_name = models.CharField(_('Full name'), max_length=130, blank=True)
+    email = models.EmailField(_('Email'), max_length=50, blank=True)
     is_staff = models.BooleanField(_('is_staff'), default=False)
     is_active = models.BooleanField(_('is_active'), default=True)
     date_joined = models.DateField(_("date_joined"), default=date.today)

@@ -6,9 +6,9 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 class Topic(models.Model):
-    title = models.CharField(_('title'), max_length=200, blank=False, null=False)
-    url = models.URLField(blank=False, null=False)
-    text = models.CharField(_('text'), max_length=500, blank=False, null=False)
+    title = models.CharField(_('Title'), max_length=200, blank=False, null=False)
+    url = models.URLField(_('URL'), blank=False, null=False)
+    text = models.TextField(_('Text'), max_length=500, blank=False, null=False)
     created_at = models.DateTimeField(_("created_at"), auto_now=True)
 
     user = models.ForeignKey(User, related_name="topic",

@@ -17,6 +17,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'django_forms_bootstrap',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
