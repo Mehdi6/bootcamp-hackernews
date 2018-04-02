@@ -45,7 +45,6 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
     # social accounts authentication services
     'allauth.socialaccount.providers.facebook',
-    #'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.twitter',
 
@@ -150,19 +149,16 @@ SITE_ID = 4
 
 SITE_ROOT = environ.Path(__file__)
 
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
+# DATABASE CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
+# Uses django-environ to accept uri format
+# See: https://django-environ.readthedocs.io/en/latest/#supported-types
 DATABASES = {
-    'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'bootcamp',
-            'USER': 'postgres',
-            'PASSWORD': 'postgres',
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
+    'default': env.db('DATABASE_URL', default='postgresql://postgres:postgres@127.0.0.1:5432/bootcamp'),
 }
+DATABASES['default']['ATOMIC_REQUESTS'] = True
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -277,10 +273,6 @@ DEFAULT_LOGGING = {
         },
     },
     'handlers': {
-        'null': {
-            'level':'DEBUG',
-            'class':'logging.NullHandler',
-        },
         'logfile': {
             'level':'DEBUG',
             'class':'logging.handlers.RotatingFileHandler',
@@ -305,10 +297,6 @@ DEFAULT_LOGGING = {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': False,
-        },
-        'MYAPP': {
-            'handlers': ['console', 'logfile'],
-            'level': 'DEBUG',
-        },
+        }
     }
 }

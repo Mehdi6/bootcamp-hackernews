@@ -23,21 +23,20 @@ class RegisterView(SuccessMessageMixin, FormView):
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
         user = form.save()
-        logger(self.request.POST['username'])
-        username = self.request.POST['username']
-        password = self.request.POST['password1']
+
+        username = form.cleaned_data['username']
+        password = user.cleaned_data['password']
+        logger.info("New user account registered {}".format(username))
         user = authenticate(username=username, password=password)
         login(self.request, user)
         response = send_verfication_code(user)
         data = json.loads(response.text)
 
-        if data['success'] == False:
+        if not data['success']:
             messages.add_message(self.request, messages.ERROR,
                             data['message'])
             return redirect('/dashboard')
 
-        logger(response.status_code, response.reason)
-        logger(response.text)
         return super().form_valid(form)
 
 

@@ -10,4 +10,4 @@ urlpatterns = [
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^services/', include('services.urls', namespace='services')),
     url(r'', include('home.urls')),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]

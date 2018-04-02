@@ -65,15 +65,6 @@ class TopicDetailView(TemplateView):
 
         context['topic'] = topic
         context['comments'] = comments
-        msg = self.request.GET.get("message")
-        tag = self.request.GET.get("tag")
-
-        if msg and tag:
-            if tag == 's':
-                messages.success(self.request, msg)
-            elif tag == 'w':
-                messages.warning(self.request, msg)
-
         context['navbar'] = 'home'
 
         return context
@@ -88,14 +79,16 @@ class CommentCreateView(View):
         form = self.form_class(request.POST)
         user = self.request.user
         topic = kwargs['id']
-        content = request.POST.get("comment_content")
-        media = request.POST.get("comment_media")
-        parent = request.POST.get("comment_parent")
 
         # Validation of comment data
         additional_errors = []
         if form.is_valid():
             logger.info("Form is valid!")
+
+            content = form.cleaned_data.get("comment_content")
+            media = form.cleaned_data.get("comment_media")
+            parent = form.cleaned_data.get("comment_parent")
+
             # validate topic id
             topics = Topic.objects.filter(id=topic)
             if len(topics) == 0:
@@ -121,19 +114,18 @@ class CommentCreateView(View):
         else:
             msg_errors = form.errors.values()
             msg_errors = "\n".join([str(msg) for msg in msg_errors] + additional_errors)
+            messages.add_message(request, messages.WARNING, msg_errors)
 
             logger.info(msg_errors)
-            return redirect("{}?{}".format(
-                reverse('services:topic_detail', args=[topic]),
-                urllib.parse.urlencode(
-                    {'message': msg_errors, 'tag': 'w'})
-            ))
+            return redirect(
+                reverse('services:topic_detail', args=[topic])
+            )
 
         success_msg = "Comment added successfully"
-        return redirect("{}?{}".format(
-            reverse('services:topic_detail', args=[topic]),
-            urllib.parse.urlencode({'message': success_msg, 'tag': 's'})
-        ))
+        messages.add_message(request, messages.SUCCESS, success_msg)
+        return redirect(
+            reverse('services:topic_detail', args=[topic])
+        )
 
 
 

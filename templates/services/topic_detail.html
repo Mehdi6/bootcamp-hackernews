@@ -21,7 +21,7 @@
             <!-- ---------------------------------------------- -->
             <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
               <tbody>
-                  <tr class="athing" id="16647565">
+                  <tr class="athing">
                       <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
                       <td class="votelinks" valign="top" style="padding-right: 10px">
@@ -97,8 +97,12 @@
                     </ul>
                 </div>
                 <div class="tab-pane" id="add-comment">
+                    {% if not user.is_authenticated %}
+                    <p>Please, <a href="{% url 'login' %}" >Login</a> to add comments or <a href="{% url 'signup' %}">Sign Up</a></p>
+                    {% endif %}
                     <form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="commentForm" role="form">
                         {% csrf_token %}
+
                         <div class="form-group">
                             <label for="email" class="col-sm-2 control-label">Comment</label>
                             <div class="col-sm-10">
@@ -138,6 +142,9 @@
         </button>
       </div>
       <div class="modal-body">
+          {% if not user.is_authenticated %}
+            <p>Please, <a href="{% url 'login' %}" >Login</a> to reply on comments or <a href="{% url 'signup' %}">Sign Up</a></p>
+            {% endif %}
         <form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="commentForm" role="form">
             {% csrf_token %}
             <input type="hidden" id="comment_parent" name="comment_parent" value="">
