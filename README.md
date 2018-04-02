@@ -20,8 +20,9 @@ How it works:
 
 - Run the server
 (1) First run the command : `python manage.py migrate`
-(2) Then: `python manage.py runsslserver`
-(3) The server is now running on https://localhost:8000/
+(2) Configure the social app using django admin, further details can be found following this [link](https://medium.com/@jinkwon711/django-allauth-facebook-login-b536444cbc6b)
+(3) Then: `python manage.py runsslserver`
+(4) The server is now running on https://localhost:8000/
 
 ## Frontend:
 
