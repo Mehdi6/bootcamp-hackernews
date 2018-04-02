@@ -20,7 +20,18 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 <div class="socialaccount_ballot">
 
   <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+    <a href="{% provider_login_url 'facebook' method='js_sdk' %}" class="btn btn-block btn-social btn-facebook">
+      <span class="fa fa-facebook fa-2x"></span>
+                   Sign in with Facebook
+     </a>
+    <a href="{% provider_login_url 'github' method='js_sdk' %}" class="btn btn-block btn-social">
+      <span class="fa fa-github fa-2x"></span>
+                   Sign in with Github
+     </a>
+    <a href="{% provider_login_url 'twitter' method='js_sdk' %}" class="btn btn-block btn-social">
+      <span class="fa fa-twitter fa-2x"></span>
+                   Sign in with Twitter
+     </a>
   </ul>
 
   <div class="login-or">{% trans 'or' %}</div>
