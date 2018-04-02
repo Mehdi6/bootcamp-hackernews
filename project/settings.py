@@ -1,9 +1,24 @@
-
 import os
 import dj_database_url
+import environ
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = environ.Path(__file__) - 2  # (project-allauth/project/settings.py - 2 = project-allauth/)
+APPS_DIR = ROOT_DIR.path('')
+
+# Load operating system environment variables and then prepare to use them
+env = environ.Env()
+
+# .env file, should load only in development environment
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+
+if READ_DOT_ENV_FILE:
+    # Operating System Environment variables have precedence over variables defined in the .env file,
+    # that is to say variables from the .env files will only be used if not defined
+    # as environment variables.
+    env_file = str(ROOT_DIR.path('.env'))
+    print('Loading : {}'.format(env_file))
+    env.read_env(env_file)
+    print('The .env file has been loaded. See settings.py for more information')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -11,17 +26,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "pi1((nb78nl)4y)aj1q(z-3z17b)5y$=_9(kg6ss^5&n5+95^s"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 # Application definition
 
-INSTALLED_APPS = [
-    'django_forms_bootstrap',
+DJANGO_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,14 +49,23 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.twitter',
 
-    'sslserver', # A useful lib to enable https request
+]
 
-    # Project's apps
-    'users',
-    'services',
+THIRD_PARTY_APPS = [
+    'django_forms_bootstrap',
+    'sslserver',  # A useful lib to enable https request
     'crispy_forms',
     'mptt',
 ]
+
+# Apps specific for this project go here.
+LOCAL_APPS = [
+    # Project's apps
+    'users',
+    'services',
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,33 +78,77 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+# URL Configuration
+# ------------------------------------------------------------------------------
 ROOT_URLCONF = 'project.urls'
+
+# DEBUG
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = env.bool('DJANGO_DEBUG', True)
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
+        'DIRS': [str(APPS_DIR.path('templates'))],
         'OPTIONS': {
+            # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
+            'debug': DEBUG,
+            # https://docs.djangoproject.com/en/dev/ref/templates/api/#loader-types
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-            ],
-            'debug': DEBUG,
+            ]
         },
     },
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
+
+# PASSWORD STORAGE SETTINGS
+# ------------------------------------------------------------------------------
+# See https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
+PASSWORD_HASHERS = [
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+]
+
+# PASSWORD VALIDATION
+# https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
+# ------------------------------------------------------------------------------
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
 # You have to specify the site id that is attributed to the site attached to
 # the social account
 SITE_ID = 4
 
-SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
+SITE_ROOT = environ.Path(__file__)
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -186,7 +249,7 @@ ALLOWED_HOSTS = []
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(str(ROOT_DIR), 'static'),
 ]
 
 STATICFILES_FINDERS = [
@@ -195,7 +258,7 @@ STATICFILES_FINDERS = [
 ]
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = str(APPS_DIR.path('staticfiles'))
 STATIC_URL = '/static/'
 
 

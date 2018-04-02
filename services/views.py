@@ -33,6 +33,7 @@ class TopicCreateView(CreateView):
         ctx['navbar'] = 'add_topic'
         return ctx
 
+
 class TopicDetailView(TemplateView):
     template_name = 'services/topic_detail.html'
 
