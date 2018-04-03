@@ -1,5 +1,13 @@
 $(document).ready(function() {
-        var root_url = 'https://localhost:8000/services/'
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        $.ajaxSetup({
+             beforeSend: function(xhr, settings) {
+                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                     // Only send the token to relative URLs i.e. locally.
+                     xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                 }
+             }
+        });
         // Upvoting a topic via ajax requests
         $(".upvote_topic").click(function() {
             var parent = $(this)
@@ -7,11 +15,12 @@ $(document).ready(function() {
             topic_id = topic_id.split("_")
             topic_id = topic_id[1]
 
-            console.log(topic_id)
-
             $.ajax({
-                url: root_url + 'topic/upvote/'+topic_id,
-                type: 'get',
+                url: url_upvote_topic, //root_url + 'topic/upvote/'+topic_id,
+                type: 'post',
+                data: {
+                    'id':topic_id
+                },
                 success: function(data) {
                     if(data == 's'){
                         console.log("Topic upvoted successfuly!")
@@ -36,6 +45,7 @@ $(document).ready(function() {
             });
             }
         )
+
         // Upvoting a comment via ajax requests
         $(".upvote_comment").click(function() {
             var parent = $(this)
@@ -43,7 +53,7 @@ $(document).ready(function() {
             comment_id = comment_id.split("_")
             comment_id = comment_id[1]
             var child = parent.find("span")
-
+            url_upvote_comment = "{% url 'services:upvote_comment' "+comment_id+" %}"
             $.ajax({
                 url: root_url + 'comment/upvote/'+comment_id,
                 type: 'get',

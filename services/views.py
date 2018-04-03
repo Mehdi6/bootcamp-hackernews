@@ -128,11 +128,19 @@ class CommentCreateView(View):
         )
 
 
-
 @login_required
-def upvote_topic(request, id):
+def upvote_topic(request):
     # validating the id first:
+    id = request.POST['id']
+    try:
+        id = int(id)
+    except ValueError:
+        msg = 'e'
+        return HttpResponse(msg)
+
     topics = Topic.objects.filter(id=id)
+    # Message to return in case of an error, or when success
+    # return 's' when success, return 'e' when error
     msg = 's'
     if len(topics) == 0:
         # flag error
@@ -154,10 +162,19 @@ def upvote_topic(request, id):
 
 
 @login_required
-def upvote_comment(request, id):
+def upvote_comment(request):
+    id = request.POST['id']
+    # Message to return in case of an error, or when success
+    # return 's' when success, return 'e' when error
+    msg = 's'
+    try:
+        id = int(id)
+    except ValueError:
+        msg = 'e'
+        return HttpResponse(msg)
     # validating the id first:
     comments = Comment.objects.filter(id=id)
-    msg = 's'
+
     if len(comments) == 0:
         # flag error
         msg = 'e'

@@ -38,8 +38,8 @@
                   <tr><td colspan="2"></td>
                       <td class="subtext">
                         <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
-                        <span class="age"><a href="services/topic/{{ topic.id }}/">{{ topic.created_at | date }}</a></span>
-                      | <a href="services/topic/{{ topic.id }}/">{{ topic.comment_count }}&nbsp;comment</a>
+                        <span class="age"><a href="{% url 'services:topic_detail' topic.id %}">{{ topic.created_at | date }}</a></span>
+                      | <a href="{% url 'services:topic_detail' topic.id %}">{{ topic.comment_count }}&nbsp;comment</a>
                       </td>
                   </tr>
                 <tr class="spacer" style="height:5px"></tr>
@@ -77,7 +77,13 @@
 
 {% block javascript %}
     {{ block.super }}
-  <!-- Additional JS to add here -->
+
+    <script>
+        var url_upvote_topic = "{% url 'services:topic_upvote' %}"
+        var url_upvote_comment = "{% url 'services:comment_upvote' %}"
+
+    </script>
+    <!-- Additional JS to add here -->
     <script src="{% static 'js/upvotes.js' %}"></script>
     <!--<script src="{% static 'js/pagination.js' %}"></script>-->
 
