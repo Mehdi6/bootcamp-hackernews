@@ -22,27 +22,7 @@
             <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
               <tbody>
               {% for topic in pagination.object_list %}
-                  <tr class="athing" id="16647565">
-                      <td class="title" valign="top" align="right"><span class="rank"></span></td>
-
-                      <td class="votelinks" valign="top" style="padding-right: 10px">
-                      {% if not topic.up_voted and user.username != ''%}
-                          <center><a class="upvote_topic" id="up_{{topic.id}}" href="javascript:void(0)">
-                              <div class="fa fa-caret-up" title="upvote"></div></a>
-                          </center></td>
-                      {% endif %}
-
-                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h4>{{ topic.title }}</h4></a>
-                      </td></tr>
-
-                  <tr><td colspan="2"></td>
-                      <td class="subtext">
-                        <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
-                        <span class="age"><a href="{% url 'services:topic_detail' topic.id %}">{{ topic.created_at | date }}</a></span>
-                      | <a href="{% url 'services:topic_detail' topic.id %}">{{ topic.comment_count }}&nbsp;comment</a>
-                      </td>
-                  </tr>
-                <tr class="spacer" style="height:5px"></tr>
+                  {% include 'home/partial/topic_description.html' %}
               {% endfor %}
               </tbody>
             </table>

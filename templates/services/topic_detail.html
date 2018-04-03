@@ -21,27 +21,7 @@
             <!-- ---------------------------------------------- -->
             <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
               <tbody>
-                  <tr class="athing">
-                      <td class="title" valign="top" align="right"><span class="rank"></span></td>
-
-                      <td class="votelinks" valign="top" style="padding-right: 10px">
-                      {% if not topic.up_voted and user.username != ''%}
-                          <center><a class="upvote_topic" id="up_{{topic.id}}" href="javascript:void(0)">
-                              <div class="fa fa-caret-up" title="upvote"></div></a>
-                          </center></td>
-                      {% endif %}
-
-                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h3>{{ topic.title }}</h3></a>
-                      </td></tr>
-
-                  <tr><td colspan="2"></td>
-                      <td class="subtext">
-                        <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
-                        <span class="age"><a href="{% url 'services:topic_detail' topic.id %}">{{ topic.created_at | date }}</a></span>
-                      | <a href="{% url 'services:topic_detail' topic.id %}">{{ topic.comment_count }}&nbsp;comment</a>
-                      </td>
-                  </tr>
-                <tr class="spacer" style="height:5px"></tr>
+                  {% include 'home/partial/topic_description.html' %}
               </tbody>
             </table>
         </div>
@@ -97,33 +77,7 @@
                     </ul>
                 </div>
                 <div class="tab-pane" id="add-comment">
-                    {% if not user.is_authenticated %}
-                    <p>Please, <a href="{% url 'login' %}" >Login</a> to add comments or <a href="{% url 'signup' %}">Sign Up</a></p>
-                    {% endif %}
-                    <form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="commentForm" role="form">
-                        {% csrf_token %}
-
-                        <div class="form-group">
-                            <label for="email" class="col-sm-2 control-label">Comment</label>
-                            <div class="col-sm-10">
-                              <textarea class="form-control" name="comment_content" id="comment_content" rows="5"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="uploadMedia" class="col-sm-2 control-label">Upload media</label>
-                            <div class="col-sm-10">
-                                <div class="input-group">
-                                  <div class="input-group-addon">URL</div>
-                                  <input type="url" class="form-control" name="comment_media" id="comment_media">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitReply" {% if not user.is_authenticated %}disabled{% endif %}><span class="glyphicon glyphicon-send"></span> Leave comment</button>
-                            </div>
-                        </div>
-                    </form>
+                    {% include "services/partial/comment_form.html" with form_type='comment' %}
                 </div>
             </div>
         </div>
@@ -142,33 +96,7 @@
         </button>
       </div>
       <div class="modal-body">
-          {% if not user.is_authenticated %}
-            <p>Please, <a href="{% url 'login' %}" >Login</a> to reply on comments or <a href="{% url 'signup' %}">Sign Up</a></p>
-            {% endif %}
-        <form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="commentForm" role="form">
-            {% csrf_token %}
-            <input type="hidden" id="comment_parent" name="comment_parent" value="">
-            <div class="form-group">
-                <label for="email" class="col-sm-2 control-label">Comment</label>
-                <div class="col-sm-10">
-                  <textarea class="form-control" name="comment_content" id="reply_content" rows="5"></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="uploadMedia" class="col-sm-2 control-label">Upload media</label>
-                <div class="col-sm-10">
-                    <div class="input-group">
-                      <div class="input-group-addon">URL</div>
-                      <input type="url" class="form-control" name="comment_media" id="reply_media">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment" {% if not user.is_authenticated %}disabled{% endif %}><span class="glyphicon glyphicon-send" ></span>Leave comment</button>
-                </div>
-            </div>
-        </form>
+          {% include "services/partial/comment_form.html" with form_type='reply' %}
       </div>
     </div>
   </div>

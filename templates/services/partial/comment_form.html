@@ -1,0 +1,32 @@
+{# Accepts the following context parameters: form_type: reply | comment #}
+
+{% if not user.is_authenticated %}
+<p>Please, <a href="{% url 'login' %}" >Login</a> to add comments or <a href="{% url 'signup' %}">Sign Up</a></p>
+{% endif %}
+<form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="{{form_type}}_form" role="form">
+    {% csrf_token %}
+    {# if the form is for creating replies, we add a hidden input that will hold the parent comment id #}
+    {% ifequal form_type 'reply' %}
+        <input type="hidden" id="comment_parent" name="comment_parent" value="">
+    {% endifequal %}
+    <div class="form-group">
+        <label for="email" class="col-sm-2 control-label">Comment</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" name="comment_content" id="{{form_type}}_content" rows="5"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="uploadMedia" class="col-sm-2 control-label">Upload media</label>
+        <div class="col-sm-10">
+            <div class="input-group">
+              <div class="input-group-addon">URL</div>
+              <input type="url" class="form-control" name="comment_media" id="{{form_type}}_media">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submit_{{form_type}}" {% if not user.is_authenticated %}disabled{% endif %}><span class="glyphicon glyphicon-send"></span> Leave comment</button>
+        </div>
+    </div>
+</form>
