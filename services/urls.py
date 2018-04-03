@@ -1,15 +1,16 @@
 from django.conf.urls import url
+
 from .views import (TopicCreateView, TopicDetailView,
                     CommentCreateView, upvote_topic, upvote_comment)
 
 urlpatterns = [
     url(
         regex=r'^topic/add/$',
-        view=TopicCreateView.as_view(),
-        name="create_topic"
+        view=TopicCreateView.as_view(success_url='/'),
+        name="create_topic",
         ),
     url(
-        regex=r'^topic/upvote/(?P<id>\d+)/$',
+        regex=r'^topic/upvote/$',
         view=upvote_topic,
         name="topic_upvote"
         ),
@@ -24,7 +25,7 @@ urlpatterns = [
         name="create_comment"
         ),
     url(
-        regex=r'^comment/upvote/(?P<id>\d+)/$',
+        regex=r'^comment/upvote/$',
         view=upvote_comment,
         name="comment_upvote"
         ),

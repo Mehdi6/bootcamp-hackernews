@@ -22,10 +22,6 @@ class Topic(models.Model):
     def comment_count(self):
         return self.comments.count()
 
-    def get_absolute_url(self):
-        from django.core.urlresolvers import reverse
-        return reverse('home')
-
     def __str__(self):
         return "ID={} Title={} url={} text={} comment_count={}".format(
             self.id, self.title, self.url, self.text, self.comment_count)
