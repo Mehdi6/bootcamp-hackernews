@@ -59,7 +59,7 @@
                               <a class="btn btn-info btn-circle text-uppercase reply" data-toggle="modal" data-target="#exampleModal" comment_id="{{ node.id }}" href="#"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
                               {% if node.subcomment_count > 0 %}<a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#reply{{node.id}}"><span class="glyphicon glyphicon-comment"></span> {{ node.subcomment_count }} comments</a>{% endif %}
                               <div id="cscore_{{node.id}}" style="font-size:1em;" class="upvote_comment pull-right">
-                                  {% if not node.up_voted and user.username != '' %}<button class="fa fa-thumbs-up" title="upvote"></button> {% endif %}<span upvotes="{{ node.up_votes }}">({{ node.up_votes }})</span>
+                                  {% if not node.up_voted and user.is_autenticated %}<button class="fa fa-thumbs-up" title="upvote"></button> {% endif %}<span upvotes="{{ node.up_votes }}">({{ node.up_votes }})</span>
                               </div>
                           </div>
                         </div>
