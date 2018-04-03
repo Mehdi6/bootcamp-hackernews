@@ -16,18 +16,18 @@ $(document).ready(function() {
             topic_id = topic_id[1]
 
             $.ajax({
-                url: url_upvote_topic, //root_url + 'topic/upvote/'+topic_id,
+                url: url_upvote_topic,
                 type: 'post',
                 data: {
                     'id':topic_id
                 },
                 success: function(data) {
                     if(data == 's'){
-                        console.log("Topic upvoted successfuly!")
+                        //console.log("Topic upvoted successfuly!")
                         // Edit the number of points by increasing them +1
                         var score_markup_tag = "#score_"+topic_id
                         var score_markup = $(score_markup_tag)
-                        console.log(score_markup)
+                        //console.log(score_markup)
                         var score = parseInt(score_markup.attr('upvotes'))
                         score += 1
                         score_markup.text(score + " points")
@@ -36,7 +36,7 @@ $(document).ready(function() {
                     }
                     else{
                         // TODO: Report error
-                        console.log("Error during the upvote process.")
+                        //console.log("Error during the upvote process.")
                     }
                 },
                 failure: function(data) {
@@ -53,13 +53,17 @@ $(document).ready(function() {
             comment_id = comment_id.split("_")
             comment_id = comment_id[1]
             var child = parent.find("span")
-            url_upvote_comment = "{% url 'services:upvote_comment' "+comment_id+" %}"
+            //console.log(url_upvote_comment)
+            //console.log(comment_id)
             $.ajax({
-                url: root_url + 'comment/upvote/'+comment_id,
-                type: 'get',
+                url: url_upvote_comment,
+                type: 'post',
+                data:{
+                    'id':comment_id
+                },
                 success: function(data) {
                     if(data =='s'){
-                        console.log("Comment upvoted successfuly!")
+                        //console.log("Comment upvoted successfuly!")
                         // Edit the number of points by increasing them +1
 
                         score = parseInt(child.attr('upvotes'))
@@ -69,7 +73,7 @@ $(document).ready(function() {
                     }
                     else{
                         // TODO: Report error
-                        console.log("Error during the upvote process!")
+                        //console.log("Error during the upvote process!")
                     }
                 },
                 failure: function(data) {
