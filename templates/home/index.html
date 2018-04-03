@@ -19,13 +19,15 @@
         <div class="col-md-12">
 
             <!-- listing topics here -->
-            <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
-              <tbody>
-              {% for topic in pagination.object_list %}
-                  {% include 'home/partial/topic_description.html' %}
-              {% endfor %}
-              </tbody>
-            </table>
+            <div class="table-reponsive">
+                <table class="table">
+                  <tbody>
+                  {% for topic in pagination.object_list %}
+                      {% include 'home/partial/topic_description.html' %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+            </div>
             <div class="pagination-container">
                 <nav aria-label="..." >
                   <ul class="pagination">

@@ -9,7 +9,8 @@
   {% endif %}
 
   <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h4>{{ topic.title }}</h4></a>
-  </td></tr>
+  </td>
+</tr>
 
 <tr><td colspan="2"></td>
   <td class="subtext">
@@ -18,4 +19,4 @@
   | <a href="{% url 'services:topic_detail' topic.id %}">{{ topic.comment_count }}&nbsp;comment</a>
   </td>
 </tr>
-<tr class="spacer" style="height:5px"></tr>
+<tr class="spacer" style="height:30px"></tr>
