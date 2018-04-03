@@ -49,7 +49,7 @@ class IndexView(TemplateView):
 
         sort_by = self.request.GET.get("sortBy")
         if sort_by == 'recent':
-            topics = topics.order_by('created_at')
+            topics = topics.order_by('-created_at')
             context["sort_by"] = 'recent'
             logger.info('recent')
         elif sort_by == 'rate':

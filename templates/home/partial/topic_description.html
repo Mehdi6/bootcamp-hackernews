@@ -1,14 +1,14 @@
-<tr class="athing">
+<tr>
   <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
   <td class="votelinks" valign="top" style="padding-right: 10px">
-  {% if not topic.up_voted and user.username != ''%}
+  {% if not topic.up_voted and user.is_authenticated %}
       <center><a class="upvote_topic" id="up_{{topic.id}}" href="javascript:void(0)">
           <div class="fa fa-caret-up" title="upvote"></div></a>
       </center></td>
   {% endif %}
 
-  <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h4>{{ topic.title }}</h4></a>
+  <td class="title"><a href="{{ topic.url }}" class="storylink"><h4>{{ topic.title }}</h4></a>
   </td>
 </tr>
 

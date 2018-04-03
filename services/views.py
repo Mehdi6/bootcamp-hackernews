@@ -1,6 +1,4 @@
-import urllib
-
-from django.views.generic import CreateView, ListView, View, TemplateView
+from django.views.generic import CreateView, View, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -13,7 +11,6 @@ from django.contrib import messages
 
 import logging
 logger = logging.getLogger(__name__)
-
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
@@ -108,9 +105,6 @@ class CommentCreateView(View):
                 new_comment = Comment(content=content, media=media, topic=tpc, user=user, parent=parent)
                 new_comment.save()
 
-                # new comment added
-                tpc.save()
-
         else:
             msg_errors = form.errors.values()
             msg_errors = "\n".join([str(msg) for msg in msg_errors] + additional_errors)
@@ -135,16 +129,14 @@ def upvote_topic(request):
     try:
         id = int(id)
     except ValueError:
-        msg = 'e'
-        return HttpResponse(msg)
+        return HttpResponse(status=400)
 
     topics = Topic.objects.filter(id=id)
     # Message to return in case of an error, or when success
     # return 's' when success, return 'e' when error
-    msg = 's'
     if len(topics) == 0:
         # flag error
-        msg = 'e'
+        return HttpResponse(status=400)
 
     topic = topics[0]
     user = request.user
@@ -152,13 +144,12 @@ def upvote_topic(request):
     # we check if the user has already upvoted the topic
     ups = UpVoteTopic.objects.filter(topic=topic, user=user)
     if len(ups) != 0:
-        msg = 'e'
+        return HttpResponse(status=400)
     else:
         up_vote = UpVoteTopic(topic=topic, user=user)
         up_vote.save()
-        # we increment the number of up_votes on the topic
-        topic.save()
-    return HttpResponse(msg)
+
+    return HttpResponse(status=200)
 
 
 @login_required
@@ -170,14 +161,13 @@ def upvote_comment(request):
     try:
         id = int(id)
     except ValueError:
-        msg = 'e'
-        return HttpResponse(msg)
+        return HttpResponse(status=400)
     # validating the id first:
     comments = Comment.objects.filter(id=id)
 
     if len(comments) == 0:
         # flag error
-        msg = 'e'
+        return HttpResponse(status=400)
 
     comment = comments[0]
     user = request.user
@@ -185,11 +175,9 @@ def upvote_comment(request):
     # we check if the user has already upvoted the topic
     ups = UpVoteComment.objects.filter(comment=comment, user=user)
     if len(ups) != 0:
-        msg = 'e'
+        return HttpResponse(status=400)
     else:
         up_vote = UpVoteComment(comment=comment, user=user)
         up_vote.save()
-        # we increment the number of up_votes on the topic
-        comment.save()
 
-    return HttpResponse(msg)
+    return HttpResponse(status=200)

@@ -22,7 +22,6 @@ $(document).ready(function() {
                     'id':topic_id
                 },
                 success: function(data) {
-                    if(data == 's'){
                         //console.log("Topic upvoted successfuly!")
                         // Edit the number of points by increasing them +1
                         var score_markup_tag = "#score_"+topic_id
@@ -33,14 +32,10 @@ $(document).ready(function() {
                         score_markup.text(score + " points")
                         score_markup.attr('upvotes', score)
                         parent.remove()
-                    }
-                    else{
-                        // TODO: Report error
-                        //console.log("Error during the upvote process.")
-                    }
                 },
                 failure: function(data) {
-                    alert('Got an error dude');
+                    // TODO: Report error
+                    //alert('Got an error dude');
                 }
             });
             }
@@ -62,19 +57,13 @@ $(document).ready(function() {
                     'id':comment_id
                 },
                 success: function(data) {
-                    if(data =='s'){
                         //console.log("Comment upvoted successfuly!")
                         // Edit the number of points by increasing them +1
-
                         score = parseInt(child.attr('upvotes'))
                         score += 1
                         child.text("("+score+")")
                         removeUpvoteButton(parent)
-                    }
-                    else{
-                        // TODO: Report error
-                        //console.log("Error during the upvote process!")
-                    }
+
                 },
                 failure: function(data) {
                     // TODO: Report error

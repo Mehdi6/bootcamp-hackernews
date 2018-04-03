@@ -9,7 +9,7 @@ class Topic(models.Model):
     title = models.CharField(_('Title'), max_length=200, blank=False, null=False)
     url = models.URLField(_('URL'), blank=False, null=False)
     text = models.TextField(_('Text'), max_length=500, blank=False, null=False)
-    created_at = models.DateTimeField(_("created_at"), auto_now=True)
+    created_at = models.DateTimeField(_("created_at"), auto_now=True, editable=False)
 
     user = models.ForeignKey(User, related_name="topic",
                              verbose_name="User", on_delete=models.CASCADE)
@@ -48,7 +48,7 @@ class Comment(MPTTModel):
     def subcomment_count(self):
         return self.get_descendant_count()
 
-    created_at = models.DateField(_("created_at"), auto_now=True)
+    created_at = models.DateTimeField(_("created_at"), auto_now=True, editable=False)
 
     def __str__(self):
         return "ID={} Content={} user={} topic={} subcomments_count={}".format(self.id, self.content, self.user,
