@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from .views import (TopicCreateView, TopicDetailView, TopicUpvoteView,
-                    CommentUpvoteView, CommentCreateView, upvote_topic)
+from .views import (TopicCreateView, TopicDetailView,
+                    CommentCreateView, upvote_topic, upvote_comment)
 
 urlpatterns = [
     url(
@@ -25,7 +25,7 @@ urlpatterns = [
         ),
     url(
         regex=r'^comment/upvote/(?P<id>\d+)/$',
-        view=CommentUpvoteView.as_view(),
+        view=upvote_comment,
         name="comment_upvote"
         ),
 ]

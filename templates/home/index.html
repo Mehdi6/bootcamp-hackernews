@@ -6,6 +6,7 @@
     {{ block.super }}
 
     <!-- Additional CSS to add here -->
+    <!-- <link href="{% static 'css/project.css' %}" rel="stylesheet">-->
 
 {% endblock %}
 
@@ -18,7 +19,6 @@
         <div class="col-md-12">
 
             <!-- listing topics here -->
-
             <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
               <tbody>
               {% for topic in topic_list %}
@@ -26,15 +26,18 @@
                       <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
                       <td class="votelinks" valign="top" style="padding-right: 10px">
-                      <center><a class="upvoteme" id="up_{{topic.id}}" href="#">
-                          <div class="fa fa-chevron-up" title="upvote"></div></a>
-                      </center></td>
-                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow">{{ topic.title }}</a>
+                      {% if not topic.up_voted and user.username != ''%}
+                          <center><a class="upvote_topic" id="up_{{topic.id}}" href="javascript:void(0)">
+                              <div class="fa fa-caret-up" title="upvote"></div></a>
+                          </center></td>
+                      {% endif %}
+
+                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h4>{{ topic.title }}</h4></a>
                       </td></tr>
 
                   <tr><td colspan="2"></td>
                       <td class="subtext">
-                        <span class="score" id="score_{{topic_id}}">{{ topic.upvotes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
+                        <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
                         <span class="age"><a href="services/topic/{{ topic.id }}/">{{ topic.created_at | date }}</a></span>
                       | <a href="services/topic/{{ topic.id }}/">{{ topic.comment_count }}&nbsp;comment</a>
                       </td>
@@ -56,22 +59,5 @@
 {% block javascript %}
     {{ block.super }}
   <!-- Additional JS to add here -->
-    <script>
-    $(".upvoteme").click(function() {
-        console.log("Hello")
-        var topic_id = $(this).attr("id")
-        console.log(topic_id)
-        $.ajax({
-            url: 'https://localhost:8000/services/topic/upvote/'+topic.,
-            type: 'get',
-            success: function(data) {
-                alert(data);
-            },
-            failure: function(data) {
-                alert('Got an error dude');
-            }
-        }
-        });
-      </script>
-
+    <script src="{% static 'js/upvotes.js' %}"></script>
 {% endblock %}

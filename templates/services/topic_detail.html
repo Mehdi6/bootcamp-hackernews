@@ -1,46 +1,191 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
+{% load mptt_tags %}
 
 {% block title %}User: {{ object.username }}{% endblock %}
 
-{% block content %}
-
-<table class="itemlist" cellspacing="0" cellpadding="0" border="0">
-  <tbody>
-  <!-- The topic details -->
-      <tr class="athing" id="16647565">
-          <td class="title" valign="top" align="right"><span class="rank"></span></td>
-
-          <td class="votelinks" valign="top" style="padding-right: 10px">
-          <center><a id="up_{{topic.id}}" href="{% url 'services:topic_upvote' topic.id %}">
-              <div class="fa fa-chevron-up" title="upvote"></div></a>
-          </center></td>
-          <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow">{{ topic.title }}</a>
-          </td></tr>
-
-      <tr><td colspan="2"></td>
-          <td class="subtext">
-            <span class="score" id="score_{{topic_id}}">{{ topic.upvotes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
-            <span class="age"><a href="services/topic/{{ topic.id }}/">{{ topic.created_at | date }}</a></span>
-          | <a href="services/topic/{{ topic.id }}/">{{ topic.comment_count }}&nbsp;comment</a>
-          </td>
-      </tr>
-    <tr class="spacer" style="height:20px"></tr>
-  </tbody>
-</table>
-
-<!-- The comment form -->
-<form action="{% url 'services:create_comment' topic.id %}" method="post">
-  {% csrf_token %}
-  <textarea name="text" rows="6" cols="60"></textarea>
-  <br>
-  <br>
-  <input value="add comment" type="submit">
-</form>
-
-<!-- The list of comments -->
-
-
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/comments.css' %}" rel="stylesheet">
 
 {% endblock %}
 
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-10 col-sm-offset-1" id="logout">
+        <div class="page-header">
+
+            <!-- The topic details -->
+            <!-- ---------------------------------------------- -->
+            <table class="itemlist" cellspacing="0" cellpadding="0" border="0">
+              <tbody>
+                  <tr class="athing" id="16647565">
+                      <td class="title" valign="top" align="right"><span class="rank"></span></td>
+
+                      <td class="votelinks" valign="top" style="padding-right: 10px">
+                      {% if not topic.up_voted and user.username != ''%}
+                          <center><a class="upvote_topic" id="up_{{topic.id}}" href="javascript:void(0)">
+                              <div class="fa fa-caret-up" title="upvote"></div></a>
+                          </center></td>
+                      {% endif %}
+
+                      <td class="title"><a href="{{ topic.url }}" class="storylink" rel="nofollow"><h3>{{ topic.title }}</h3></a>
+                      </td></tr>
+
+                  <tr><td colspan="2"></td>
+                      <td class="subtext">
+                        <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
+                        <span class="age"><a href="services/topic/{{ topic.id }}/">{{ topic.created_at | date }}</a></span>
+                      | <a href="services/topic/{{ topic.id }}/">{{ topic.comment_count }}&nbsp;comment</a>
+                      </td>
+                  </tr>
+                <tr class="spacer" style="height:5px"></tr>
+              </tbody>
+            </table>
+        </div>
+
+
+            <!-- Comments on topic -->
+            <!-- ---------------------------------------------- -->
+        <div class="comment-tabs">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#comments-logout" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Comments</h4></a></li>
+                <li><a href="#add-comment" role="tab" data-toggle="tab"><h4 class="reviews text-capitalize">Add comment</h4></a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="comments-logout">
+                    <ul class="media-list">
+
+                      <li class="media">
+                      {% recursetree comments %}
+                        <a class="pull-left" href="{% url 'users:detail' node.user.username %}">
+                          <img class="media-object img-circle" src="{% if node.user.profile_picture %} {{ node.user.profile_picture }} {% else %} https://www.wallstreetotc.com/wp-content/uploads/2014/10/facebook-anonymous-app.jpg {% endif %}" alt="profile">
+                        </a>
+                        <div class="media-body">
+                          <div class="well well-lg">
+                              <h4 class="media-heading text-uppercase reviews">{{ node.user.username }}</h4>
+                              <ul class="media-date text-uppercase reviews list-inline">
+                                <li class="dd">{{ node.created_at.day }} </li>
+                                <li class="mm">{{ node.created_at.month }} </li>
+                                <li class="aaaa">{{ node.created_at.year }}</li>
+                              </ul>
+                              <p class="media-comment">
+                                {{ node.content }}
+                              </p>
+
+                              <a class="btn btn-info btn-circle text-uppercase reply" data-toggle="modal" data-target="#exampleModal" comment_id="{{ node.id }}" href="#"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                              {% if node.subcomment_count > 0 %}<a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#reply{{node.id}}"><span class="glyphicon glyphicon-comment"></span> {{ node.subcomment_count }} comments</a>{% endif %}
+                              <div id="cscore_{{node.id}}" style="font-size:1em;" class="upvote_comment pull-right">
+                                  {% if not node.up_voted and user.username != '' %}<button class="fa fa-thumbs-up" title="upvote"></button> {% endif %}<span upvotes="{{ node.up_votes }}">({{ node.up_votes }})</span>
+                              </div>
+                          </div>
+                        </div>
+                      {% if not node.is_leaf_node %}
+                        <div class="collapse" id="reply{{node.id}}">
+                            <ul class="media-list">
+                                <li class="media media-replied">
+                                    {{ children }}
+                                </li>
+                            </ul>
+                        </div>
+                      {% endif %}
+                      {% endrecursetree %}
+                      </li>
+
+                    </ul>
+                </div>
+                <div class="tab-pane" id="add-comment">
+                    <form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="commentForm" role="form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Comment</label>
+                            <div class="col-sm-10">
+                              <textarea class="form-control" name="comment_content" id="reply_content" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="uploadMedia" class="col-sm-2 control-label">Upload media</label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                  <div class="input-group-addon">URL</div>
+                                  <input type="url" class="form-control" name="comment_media" id="reply_media">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitReply"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+	</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Reply</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'services:create_comment' topic.id %}" method="post" class="form-horizontal" id="commentForm" role="form">
+            {% csrf_token %}
+            <input type="hidden" id="comment_parent" name="comment_parent" value="">
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">Comment</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" name="comment_content" id="comment_content" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="uploadMedia" class="col-sm-2 control-label">Upload media</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-addon">URL</div>
+                      <input type="url" class="form-control" name="comment_media" id="comment_media">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button class="btn btn-success btn-circle text-uppercase" type="submit" id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit comment</button>
+                </div>
+            </div>
+        </form>
+      </div>
+        <!--
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+      -->
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+
+    <!-- Additional JS to add here -->
+    <script src="{% static 'js/upvotes.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+        $(".reply").click(function() {
+            $("#comment_parent").val($(this).attr('comment_id'))
+
+        });
+    });
+    </script>
+{% endblock javascript %}
