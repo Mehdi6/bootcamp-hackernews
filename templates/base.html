@@ -52,7 +52,7 @@
                 {% endif %}
 
               <li class="nav-item {% ifequal navbar 'add_topic' %} active {%endifequal%}">
-                <a class="nav-link" href="{% url 'services:create_topic' %}">{% trans "Add Topic" %}</a>
+                <a class="nav-link" href="{% url 'services:create_topic' %}" data-toggle="modal" data-target="#create_topic" href="#">{% trans "Add Topic" %}</a>
               </li>
               <li class="nav-item {% ifequal navbar 'profile' %} active {%endifequal%}">
                 {# URL provided by django-allauth/account/urls.py #}
@@ -99,6 +99,53 @@
       {% block content %}
         <p>Use this document as a way to quick start any new project.</p>
       {% endblock content %}
+
+
+    <!-- Modal for creating new topics, added to the template if and only if the user is authenticated -->
+    {% if user.is_authenticated %}
+        <div class="modal fade" id="create_topic" tabindex="-1" role="dialog" aria-labelledby="CreateTopicModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="CreateTopicModalLabel">Create topic</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form action="{% url 'services:create_topic' %}" method="post">{% csrf_token %}
+                    <div id="div_id_title" class="form-group  ">
+                        <label for="id_title" class="control-label required-field ">
+                            Title
+                        </label>
+                        <div class="">
+                            <input class=" form-control" id="id_title" maxlength="200" name="title" type="text">
+                        </div>
+                    </div>
+                    <div id="div_id_text" class="form-group  ">
+                        <label for="id_text" class="control-label required-field ">
+                            Text
+                        </label>
+                        <div class="">
+                            <textarea class=" form-control" cols="40" id="id_text" maxlength="500" name="text" rows="10"></textarea>
+                        </div>
+                    </div>
+                    <div id="div_id_url" class="form-group  ">
+                        <label for="id_url" class="control-label required-field ">
+                            URL
+                        </label>
+                        <div class="">
+                            <input class=" form-control" id="id_url" maxlength="200" name="url" type="url">
+                        </div>
+                    </div>
+                    <input type="submit" value="Save" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+
 
     </div> <!-- /container -->
 

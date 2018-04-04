@@ -10,7 +10,9 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')

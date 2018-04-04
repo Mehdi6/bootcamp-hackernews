@@ -1,0 +1,34 @@
+What is done?
+	features implemented and manually tested:
+		-authentication with:
+			*social networks: github, facebook, twitter
+			*signup from the plateform
+		
+		-creating topic
+		-add/create comment on topic
+		-reply to comment
+		-upvote comment
+		-upvote topic
+		-sort topics by recency/rate(upvotes points)
+
+What is still not done?
+	-tests:
+		1) leaning how, pluralsight: pytest, selenium, and behavioral tests
+		2) implementing tests
+	-production with docker:
+		1) publish my work on docker
+		2)
+
+what to do today?
+
+	Transforming existing django tests:
+		-authentication with:
+			*social networks: github, facebook, twitter
+			*signup from the plateform
+		
+		+-creating topic
+		+-add/create comment on topic
+		+-reply to comment
+		-upvote comment
+		-upvote topic
+		-sort topics by recency/rate(upvotes points)

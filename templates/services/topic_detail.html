@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static i18n %}
 {% load mptt_tags %}
+{% load service_extras %}
 
 {% block title %}User: {{ object.username }}{% endblock %}
 
@@ -48,15 +49,13 @@
                           <div class="well well-lg">
                               <h4 class="media-heading text-uppercase reviews">{{ node.user.username }}</h4>
                               <ul class="media-date text-uppercase reviews list-inline">
-                                <li class="dd">{{ node.created_at.day }} </li>
-                                <li class="mm">{{ node.created_at.month }} </li>
-                                <li class="aaaa">{{ node.created_at.year }}</li>
+                                {{ node.created_at | timesince | up_to:',' }} <small>ago</small>
                               </ul>
                               <p class="media-comment">
                                 {{ node.content }}
                               </p>
 
-                              <a class="btn btn-info btn-circle text-uppercase reply" data-toggle="modal" data-target="#exampleModal" comment_id="{{ node.id }}" href="#"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
+                              <a class="btn btn-info btn-circle text-uppercase reply" data-toggle="modal" data-target="#reply_modal" comment_id="{{ node.id }}" href="#"><span class="glyphicon glyphicon-share-alt"></span> Reply</a>
                               {% if node.subcomment_count > 0 %}<a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse" href="#reply{{node.id}}"><span class="glyphicon glyphicon-comment"></span> {{ node.subcomment_count }} comments</a>{% endif %}
                               <div id="cscore_{{node.id}}" style="font-size:1em;" class="upvote_comment pull-right">
                                   {% if not node.up_voted and user.is_autenticated %}<button class="fa fa-thumbs-up" title="upvote"></button> {% endif %}<span upvotes="{{ node.up_votes }}">({{ node.up_votes }})</span>
@@ -91,7 +90,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Reply</h5>
+        <h5 class="modal-title" id="ReplyModalLabel">Reply</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

@@ -1,3 +1,5 @@
+{% load service_extras %}
+
 <tr>
   <td class="title" valign="top" align="right"><span class="rank"></span></td>
 
@@ -15,7 +17,7 @@
 <tr><td colspan="2"></td>
   <td class="subtext">
     <span class="score" id="score_{{topic.id}}" upvotes='{{ topic.up_votes }}' >{{ topic.up_votes }} points</span> by <a href="users/{{ topic.user.username }}" class="hnuser">{{ topic.user.username }}</a>
-    <span class="age"><a href="{% url 'services:topic_detail' topic.id %}">{{ topic.created_at | date }}</a></span>
+    <span class="age"><a href="{% url 'services:topic_detail' topic.id %}">{{ topic.created_at | timesince | up_to:"," }} ago</a></span>
   | <a href="{% url 'services:topic_detail' topic.id %}">{{ topic.comment_count }}&nbsp;comment</a>
   </td>
 </tr>

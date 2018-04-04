@@ -8,13 +8,16 @@
 
   <div class="row">
     <div class="col-sm-12">
-
+      <img class="media-object img-circle" src="{% if node.user.profile_picture %} {{ node.user.profile_picture }} {% else %} https://www.wallstreetotc.com/wp-content/uploads/2014/10/facebook-anonymous-app.jpg {% endif %}" style="max-width: 150px;" alt="profile">
       <h2>{{ object.username }}</h2>
       {% if object.name %}
         <p>{{ object.name }}</p>
       {% endif %}
       {% if object.full_name %}
         <p>{{ object.full_name }}</p>
+      {% endif %}
+      {% if object.email %}
+        <p>{{ object.email }}</p>
       {% endif %}
     </div>
   </div>
