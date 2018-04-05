@@ -73,7 +73,8 @@ class TopicTestCase(TestCase):
         # we check if the topic was not created, given the fact that a
         # required field is missing
         new_topic = Topic.objects.filter(url=self.topic.url)
-        self.assertEqual(len(new_topic), 0)
+        self.assertEqual(len(new_topic), 1)
+
 
     def test_topic_length(self):
         c = Client()

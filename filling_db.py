@@ -7,16 +7,16 @@ from users.models import User
 def create_users():
     for i in range(10):
         new_user = User(
-            username='user'+str(i),
-            email='user'+str(i)+'@email.com',
-            full_name='testing user'+str(i),
+            username='user' + str(i),
+            email='user' + str(i) + '@email.com',
+            full_name='testing user' + str(i),
             is_active=True,
             is_staff=False,
             profile_picture='https://www.wallstreetotc.com/wp-content/\
             uploads/2014/10/facebook-anonymous-app.jpg',
         )
 
-        new_user.set_password("password"+str(i))
+        new_user.set_password("password" + str(i))
         new_user.save()
 
 
@@ -28,7 +28,8 @@ def string_generator(size=6, chars=string.ascii_lowercase +
 def create_topic(user):
     random_title = string_generator(size=100)
     random_text = string_generator(size=300)
-    random_url = "https://" + string_generator(size=20) + ".com/"
+    random_url = "https://" + string_generator(size=20, chars=string.ascii_lowercase +
+                                                              string.digits) + ".com/"
 
     topic = Topic(title=random_title,
                   text=random_text,
@@ -41,7 +42,8 @@ def create_topic(user):
 
 def create_comment(topic, user):
     content = string_generator(size=300)
-    media = "https://" + string_generator(size=20) + ".com/"
+    media = "https://" + string_generator(size=20, chars=string.ascii_lowercase +
+                                                              string.digits) + ".com/"
 
     comment = Comment(content=content,
                       media=media,

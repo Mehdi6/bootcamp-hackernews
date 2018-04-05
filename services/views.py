@@ -35,11 +35,12 @@ class TopicCreateView(View):
             new_topic.save()
 
             messages.success(request, 'Topic successfully created!')
-            return redirect(reverse('home'), status=201)
+            return redirect('home')
+
 
         # we add error messages to the request
         messages.warning(request, form.errors)
-        return redirect(reverse('home'), status=400)
+        return redirect('home')
 
 
 class TopicDetailView(TemplateView):
