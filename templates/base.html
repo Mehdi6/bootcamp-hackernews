@@ -52,7 +52,7 @@
                 {% endif %}
 
               <li class="nav-item {% ifequal navbar 'add_topic' %} active {%endifequal%}">
-                <a class="nav-link" href="{% url 'services:create_topic' %}" data-toggle="modal" data-target="#create_topic" href="#">{% trans "Add Topic" %}</a>
+                <a class="nav-link" data-toggle="modal" data-target="#create_topic" href="#">{% trans "Add Topic" %}</a>
               </li>
               <li class="nav-item {% ifequal navbar 'profile' %} active {%endifequal%}">
                 {# URL provided by django-allauth/account/urls.py #}
@@ -101,7 +101,10 @@
       {% endblock content %}
 
 
-    <!-- Modal for creating new topics, added to the template if and only if the user is authenticated -->
+    </div> <!-- /container -->
+
+    {% block modal %}
+      <!-- Modal for creating new topics, added to the template if and only if the user is authenticated -->
     {% if user.is_authenticated %}
         <div class="modal fade" id="create_topic" tabindex="-1" role="dialog" aria-labelledby="CreateTopicModal" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -145,11 +148,7 @@
           </div>
         </div>
     {% endif %}
-
-
-    </div> <!-- /container -->
-
-    {% block modal %}{% endblock modal %}
+  {% endblock modal %}
 
     <!-- Le javascript
     ================================================== -->

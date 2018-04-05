@@ -2,31 +2,22 @@ import string
 import random
 from services.models import Topic, Comment, UpVoteTopic
 from users.models import User
-from django.test import Client
-
-c = Client()
-c.login(username='user', password='password')
 
 
-# creating a user first
-def create_user():
-    users = User.objects.filter(username='user')
-    if len(users) == 1:
-        return users[0]
+def create_users():
+    for i in range(10):
+        new_user = User(
+            username='user'+str(i),
+            email='user'+str(i)+'@email.com',
+            full_name='testing user'+str(i),
+            is_active=True,
+            is_staff=False,
+            profile_picture='https://www.wallstreetotc.com/wp-content/\
+            uploads/2014/10/facebook-anonymous-app.jpg',
+        )
 
-    new_user = User(
-        username='user',
-        email='user@email.com',
-        full_name='testing user',
-        is_active=True,
-        is_staff=False,
-        profile_picture='https://www.wallstreetotc.com/wp-content/\
-        uploads/2014/10/facebook-anonymous-app.jpg',
-    )
-
-    new_user.set_password("password")
-    new_user.save()
-    return new_user
+        new_user.set_password("password"+str(i))
+        new_user.save()
 
 
 def string_generator(size=6, chars=string.ascii_lowercase +
@@ -75,8 +66,23 @@ def create_reply(comment, user):
     return reply
 
 
+def upvote_topic(topic):
+    users = User.objects.all()
+    users_number = len(users)
+    i = random.randint(0, users_number)
+
+    for j in range(i):
+        up = UpVoteTopic(user=users[j], topic=topic)
+        up.save()
+
+
 def generate_dump_data():
-    user = create_user()
+    create_users()
+    user = User.objects.all()
+    if len(user) != 0:
+        user = user[0]
+    else:
+        return
 
     for _ in range(100):
         topic = create_topic(user=user)
@@ -93,14 +99,5 @@ def generate_dump_data():
                 reply.save()
 
 
-def upvote_topic(topic):
-    users = User.objects.all()
-    users_number = len(users)
-    i = random.randint(0, users_number)
-
-    for j in range(i):
-        up = UpVoteTopic(user=users[j], topic=topic)
-        up.save()
-
-
-generate_dump_data()
+if __name__ == '__main__':
+    generate_dump_data()

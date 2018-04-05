@@ -2,10 +2,10 @@ from django.views.generic import CreateView, View, TemplateView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from services.forms import CommentForm
+from services.forms import CommentForm, TopicForm
 from .models import Topic, Comment, UpVoteTopic, UpVoteComment
 from django.core.exceptions import ValidationError
-from django.shortcuts import HttpResponse, redirect
+from django.shortcuts import HttpResponse, redirect, render
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
@@ -16,21 +16,30 @@ logger = logging.getLogger(__name__)
 
 # Simple Topic view to create/add a topic by a user
 @method_decorator(login_required, name='dispatch')
-class TopicCreateView(CreateView):
-    model = Topic
-    fields = ['title', 'text', 'url']
+class TopicCreateView(View):
+    template_name = 'home/index.html'
+    form_class = TopicForm
 
-    def form_valid(self, form):
-        # This method is called when valid form data has been posted
-        # Add the user who added the topic to the instance
-        form.instance.user = self.request.user
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        user = self.request.user
 
-        return super().form_valid(form)
+        if form.is_valid():
+            logger.info("Topic form is valid!")
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx['navbar'] = 'add_topic'
-        return ctx
+            title = form.cleaned_data['title']
+            text = form.cleaned_data['text']
+            url = form.cleaned_data['url']
+
+            new_topic = Topic(title=title, text=text, url=url, user=user)
+            new_topic.save()
+
+            messages.success(request, 'Topic successfully created!')
+            return redirect(reverse('home'), status=201)
+
+        # we add error messages to the request
+        messages.warning(request, form.errors)
+        return redirect(reverse('home'), status=400)
 
 
 class TopicDetailView(TemplateView):
@@ -82,7 +91,7 @@ class CommentCreateView(View):
         # Validation of comment data
         additional_errors = []
         if form.is_valid():
-            logger.info("Form is valid!")
+            logger.info("Comment form is valid!")
 
             content = form.cleaned_data.get("comment_content")
             media = form.cleaned_data.get("comment_media")

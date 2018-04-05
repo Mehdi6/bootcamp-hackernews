@@ -6,7 +6,7 @@ from .views import (TopicCreateView, TopicDetailView,
 urlpatterns = [
     url(
         regex=r'^topic/add/$',
-        view=TopicCreateView.as_view(success_url='/'),
+        view=TopicCreateView.as_view(),
         name="create_topic",
         ),
     url(

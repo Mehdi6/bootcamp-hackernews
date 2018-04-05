@@ -85,7 +85,6 @@ class TopicTestCase(TestCase):
 
         c.post(url, {'title':title, "media":media, "text": text})
 
-
         # check that the comment wasn't added
         result = Comment.objects.filter(media=media)
 
