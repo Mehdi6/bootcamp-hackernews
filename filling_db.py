@@ -4,6 +4,21 @@ from services.models import Topic, Comment, UpVoteTopic
 from users.models import User
 
 
+def create_user():
+    new_user = User(
+        username='user',
+        email='user@email.com',
+        full_name='testing user',
+        is_active=True,
+        is_staff=False,
+        profile_picture='https://www.wallstreetotc.com/wp-content/uplo\
+        ads/2014/10/facebook-anonymous-app.jpg',
+    )
+
+    new_user.set_password("password")
+    new_user.save()
+    return new_user
+
 def create_users():
     for i in range(10):
         new_user = User(
