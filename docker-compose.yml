@@ -24,6 +24,7 @@ services:
       - -c
       - python3 manage.py migrate --no-input &&
         python3 manage.py collectstatic --noinput &&
-        python3 manage.py runsslserver 0.0.0.0:443
+        python3 manage.py runsslserver 0.0.0.0:443 &&
+        python3 gunicorn -k gevent -b 0.0.0.0:443 --workers=4 --log-level=info project.wsgi
     volumes:
       - .:/home/docker/code
