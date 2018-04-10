@@ -2,7 +2,7 @@ FROM python:3
 
 MAINTAINER Dockerfiles
 
-# Install required packages and remove the apt packages cache when done.
+# Upgrade pip to the newest version
 
 RUN pip3 install -U pip
 
@@ -10,12 +10,14 @@ RUN pip3 install -U pip
 COPY requirements/production.txt /home/docker/code/
 COPY requirements/base.txt /home/docker/code/
 
-# Install all the dependecies
+# Install all the dependecies and libraries needed for the production mode
 RUN pip3 install -r /home/docker/code/production.txt
 
 # add (the rest of) our code
 COPY . /home/docker/code/
 
+# set the work directory
 WORKDIR /home/docker/code/
 
+# setting the listing port for the container
 EXPOSE 443
