@@ -38,7 +38,7 @@ Setting the server locally:
 (6) The server is now running on https://localhost:8000/
 
 Setting the server on production mode (Docker)
-
+- Configure a `.env` config file (eg: the env.example)
 - Simply run the next command line `sudo docker-compose up --build -d`
 - Read the log using the next command `sudo docker-compose logs`
 - Now the server run on https://localhost:443/
