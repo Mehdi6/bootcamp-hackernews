@@ -42,6 +42,7 @@ Setting the server on production mode (Docker)
 - Simply run the next command line `sudo docker-compose up --build -d`
 - Read the log using the next command `sudo docker-compose logs`
 - Now the server run on https://localhost:443/
+- Create a superuser by running the next command: `sudo docker-compose run app python3 manage.py createsuperuser -username admin`
 - Configure the social app using django admin, further details can be found following this [link](https://medium.com/@jinkwon711/django-allauth-facebook-login-b536444cbc6b)
 
 ## Frontend:
