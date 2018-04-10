@@ -9,7 +9,7 @@ APPS_DIR = ROOT_DIR.path('')
 env = environ.Env()
 
 # .env file, should load only in development environment
-READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
+READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=True)
 
 if READ_DOT_ENV_FILE:
     # Operating System Environment variables have precedence over variables defined in the .env file,
@@ -18,7 +18,7 @@ if READ_DOT_ENV_FILE:
     env_file = str(ROOT_DIR.path('.env'))
     print('Loading : {}'.format(env_file))
     env.read_env(env_file)
-    print('The .env file has been loaded. See settings.py for more information')
+    print('The .env file has been loaded. See base.py for more information')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/

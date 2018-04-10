@@ -6,3 +6,5 @@ db.sqlite3
 .idea/
 .pytest_cache/
 todo.txt
+.cache/
+.pytest_cache/
