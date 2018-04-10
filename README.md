@@ -27,13 +27,15 @@ Setting the server locally:
     `export DJANGO_SETTINGS_MODULE=project.settings.local` &&
     `export DJANGO_READ_DOT_ENV_FILE=False`
 
-(2) First run the command : `python3 manage.py migrate`
+(2) Create a database and name it `bootcamp`, by the default PostgreSQL user `postgres`
 
-(3) Configure the social app using django admin, further details can be found following this [link](https://medium.com/@jinkwon711/django-allauth-facebook-login-b536444cbc6b)
+(3) First run the command : `python3 manage.py migrate`
 
-(4) Then: `python3 manage.py runsslserver`
+(4) Configure the social app using django admin, further details can be found following this [link](https://medium.com/@jinkwon711/django-allauth-facebook-login-b536444cbc6b)
 
-(5) The server is now running on https://localhost:8000/
+(5) Then: `python3 manage.py runsslserver`
+
+(6) The server is now running on https://localhost:8000/
 
 Setting the server on production mode (Docker)
 
