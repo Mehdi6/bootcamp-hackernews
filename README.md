@@ -22,9 +22,10 @@ Setting the server locally:
     Install the requirements by running the following command line: `pip3 install -r requirements/local.txt`
 
 - Run the server
-(1) Define the next environement variables:
-    export DJANGO_SETTINGS_MODULE=project.settings.local
-    export DJANGO_READ_DOT_ENV_FILE=False
+
+(1) Define the next environment variables:
+    `export DJANGO_SETTINGS_MODULE=project.settings.local` &&
+    `export DJANGO_READ_DOT_ENV_FILE=False`
 
 (2) First run the command : `python3 manage.py migrate`
 
