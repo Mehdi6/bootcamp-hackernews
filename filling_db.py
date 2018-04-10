@@ -5,6 +5,15 @@ from users.models import User
 
 
 def create_user():
+
+    # we check if the user exists first
+    # if it does exist, we return the user object
+    usr = User.objects.filter(username='user')
+    if len(usr) > 0:
+        return usr[0]
+
+    # otherwise we create a new user
+
     new_user = User(
         username='user',
         email='user@email.com',
@@ -21,18 +30,22 @@ def create_user():
 
 def create_users():
     for i in range(10):
-        new_user = User(
-            username='user' + str(i),
-            email='user' + str(i) + '@email.com',
-            full_name='testing user' + str(i),
-            is_active=True,
-            is_staff=False,
-            profile_picture='https://www.wallstreetotc.com/wp-content/\
-            uploads/2014/10/facebook-anonymous-app.jpg',
-        )
+        # we start by first checking if the user does exist
+        username = 'user' + str(i)
+        usr = User.objects.filter(username=username)
+        if len(usr) == 0:
+            new_user = User(
+                username=username,
+                email=username + '@email.com',
+                full_name='testing user' + str(i),
+                is_active=True,
+                is_staff=False,
+                profile_picture='https://www.wallstreetotc.com/wp-content/\
+                uploads/2014/10/facebook-anonymous-app.jpg',
+            )
 
-        new_user.set_password("password" + str(i))
-        new_user.save()
+            new_user.set_password("password" + str(i))
+            new_user.save()
 
 
 def string_generator(size=6, chars=string.ascii_lowercase +
