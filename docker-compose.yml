@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  db:
+    environment:
+      POSTGRES_DB: bootcamp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
+    image: postgres:9.6
+  app:
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/bootcamp
+      DJANGO_MANAGEPY_MIGRATE: 'xon'
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    links:
+      - db:db
+    ports:
+      - "443:443"
+    command:
+      - sh
+      - -c
+      - python3 manage.py migrate --no-input &&
+        python3 manage.py runsslserver 0.0.0.0:443
+    volumes:
+      - .:/home/docker/code
