@@ -1,8 +1,8 @@
 import os
-import dj_database_url
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 2  # (project-allauth/project/settings.py - 2 = project-allauth/)
+
+ROOT_DIR = environ.Path(__file__) - 3  # (project-allauth/project/settings/base.py - 3 = project-allauth/)
 APPS_DIR = ROOT_DIR.path('')
 
 # Load operating system environment variables and then prepare to use them
@@ -29,9 +29,6 @@ SECRET_KEY = "pi1((nb78nl)4y)aj1q(z-3z17b)5y$=_9(kg6ss^5&n5+95^s"
 # Application definition
 
 DJANGO_APPS = [
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,25 +40,28 @@ DJANGO_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+]
+
+THIRD_PARTY_APPS = [
+    'crispy_forms',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     # social accounts authentication services
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.twitter',
 
-]
-
-THIRD_PARTY_APPS = [
-    'django_forms_bootstrap',
+    'bootstrapform',
     'sslserver',  # A useful lib to enable https request
-    'crispy_forms',
     'mptt',
 ]
 
 # Apps specific for this project go here.
 LOCAL_APPS = [
     # Project's apps
-    'users',
-    'services',
+    'users.apps.UsersConfig',
+    'services.apps.ServicesConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -81,11 +81,17 @@ MIDDLEWARE_CLASSES = [
 # ------------------------------------------------------------------------------
 ROOT_URLCONF = 'project.urls'
 
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
+WSGI_APPLICATION = 'project.wsgi.application'
+
 # DEBUG
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = env.bool('DJANGO_DEBUG', True)
+DEBUG = env.bool('DJANGO_DEBUG', False)
 
+# TEMPLATE CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#templates
 
 TEMPLATES = [
     {
@@ -112,6 +118,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
@@ -147,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # the social account
 SITE_ID = 4
 
-SITE_ROOT = environ.Path(__file__)
+SITE_ROOT = environ.Path()
 
 # DATABASE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -182,7 +191,19 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL CONFIGURATION
+# ------------------------------------------------------------------------------
+EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+
+# MANAGER CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
+ADMINS = [
+    ("""Mehdi Essebbar""", 'mehdiessebbar@gmail.com'),
+]
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
+MANAGERS = ADMINS
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -222,18 +243,29 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# GENERAL CONFIGURATION
+# ------------------------------------------------------------------------------
+# Local time zone for this installation. Choices can be found here:
+# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
+# although not all choices may be available on all operating systems.
+# In a Windows environment this must be set to your system time zone.
 TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
 
-# Update database configuration with $DATABASE_URL.
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
+LANGUAGE_CODE = 'en-us'
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
+SITE_ID = 4
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
+USE_I18N = True
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#use-l10n
+USE_L10N = True
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
+USE_TZ = True
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -257,46 +289,9 @@ STATICFILES_FINDERS = [
 STATIC_ROOT = str(APPS_DIR.path('staticfiles'))
 STATIC_URL = '/static/'
 
+# Location of root django.contrib.admin URL, use {% url 'admin:index' %}
+ADMIN_URL = r'^admin/'
 
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-DEFAULT_LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-    'formatters': {
-        'standard': {
-            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            'datefmt' : "%d/%b/%Y %H:%M:%S"
-        },
-    },
-    'handlers': {
-        'logfile': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': SITE_ROOT + "/logfile",
-            'maxBytes': 50000,
-            'backupCount': 2,
-            'formatter': 'standard',
-        },
-        'console':{
-            'level':'INFO',
-            'class':'logging.StreamHandler',
-            'formatter': 'standard'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers':['console'],
-            'propagate': True,
-            'level':'WARN',
-        },
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        }
-    }
-}
