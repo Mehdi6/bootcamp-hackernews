@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class RegisterForm(forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput())
-    password2 = forms.CharField(widget=forms.PasswordInput())
+    password1 = forms.CharField(label=_('Password'), widget=forms.PasswordInput())
+    password2 = forms.CharField(label=_('Password (again)'), widget=forms.PasswordInput())
 
     MIN_LENGTH = 4
 
@@ -18,6 +18,11 @@ class RegisterForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'password1',
                     'password2', 'full_name' ]
+        widgets = {
+            'username': forms.TextInput(attrs={'placeholder': 'Username'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'full_name': forms.TextInput(attrs={'placeholder': 'Full name'}),
+        }
 
     def clean_username(self):
         username = self.data.get('username')
