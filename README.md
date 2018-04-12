@@ -1,6 +1,16 @@
 # Django (Hacker-news clone)
 This web application is intended to training purposes, in the context of a bootcamp, it implements a clone of the hacker news [website](https://news.ycombinator.com/)
 
+## Features
+
+- As a User, I want to sign in/up using my Facebook Account to the platform so I can access to the feed
+- As a User, I want to submit a new topic
+- As a User, I want to upvote a topic
+- As a User, I want to comment an existing topic
+- As a User, I want to sort topics by ‘Most Recent’ & ‘Most rated’
+- As a User, I want to see the number of commects by topics
+- As a User, I want to click on more to see the next 10 topics
+
 ## Backend: Django/ PostgreSQL
 
 Technologies:
