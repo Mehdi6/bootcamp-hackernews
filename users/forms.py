@@ -1,10 +1,12 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 from django.contrib.auth.password_validation import validate_password
 
 from .models import User
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -17,27 +19,35 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1',
-                    'password2', 'full_name' ]
+                  'password2', 'full_name']
         widgets = {
             'username': forms.TextInput(attrs={'placeholder': 'Username'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
             'full_name': forms.TextInput(attrs={'placeholder': 'Full name'}),
         }
 
-    def clean_username(self):
-        username = self.data.get('username')
+    def validate_username(self, username):
+        # we check if the username does exist
+        print(username)
+        results = User.objects.filter(username=username)
+        if len(results) != 0:
+            print("There is an error here!")
+            raise forms.ValidationError(_("Username already exists"))
         return username
 
-    def clean_password1(self):
-        password = self.data.get('password1')
-        validate_password(password)
+    def validate_password1(self, password):
+        print(password)
+        try:
+            validate_password(password)
+        except ValidationError:
+            raise forms.ValidationError(_("Invalid password!"))
+
         if password != self.data.get('password2'):
             raise forms.ValidationError(_("Passwords do not match"))
         return password
 
-    def clean_email(self):
+    def validate_email(self, email):
         # if email already exists, then send back validation error
-        email = self.data.get('email')
         results = User.objects.filter(email=email)
         logger.info(results)
         if len(results) != 0:
@@ -58,4 +68,4 @@ class LoginForm(forms.Form):
     password = forms.CharField()
 
     class Meta:
-        fields = ['username','password']
+        fields = ['username', 'password']

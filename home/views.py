@@ -43,7 +43,7 @@ class IndexView(TemplateView):
     template_name = 'home/index.html'
 
     def get_context_data(self, **kwargs):
-        page = self.request.GET.get("page");
+        page = self.request.GET.get("page")
         context = super().get_context_data(**kwargs)
         topics = Topic.objects.all()
 

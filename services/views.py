@@ -35,8 +35,7 @@ class TopicCreateView(View):
             new_topic.save()
 
             messages.success(request, 'Topic successfully created!')
-            return redirect('home')
-
+            return redirect('/?sortBy=recent')
 
         # we add error messages to the request
         messages.warning(request, form.errors)
@@ -75,6 +74,7 @@ class TopicDetailView(TemplateView):
         context['topic'] = topic
         context['comments'] = comments
         context['navbar'] = 'home'
+        print(context)
 
         return context
 

@@ -6,11 +6,10 @@ from django.views import defaults as default_views
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, admin.site.urls),
-
+    url(r'^', include('home.urls')),
     url(r'^', include('allauth.urls')),
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^services/', include('services.urls', namespace='services')),
-    url(r'', include('home.urls')),
 ]
 
 if settings.DEBUG:

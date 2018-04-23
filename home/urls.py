@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from django.contrib import admin
-from allauth.account.views import LoginView, SignupView
+from allauth.account.views import LoginView
+from users.views import RegisterView
 from .views import IndexView, AboutView
 
 urlpatterns = [
@@ -13,12 +14,12 @@ urlpatterns = [
         view=AboutView.as_view(),
         name="about"
         ),
-    url(regex=r'^login$',
+    url(regex=r'^login/$',
         view=LoginView.as_view(),
         name="login"
         ),
-    url(regex=r'^signup$',
-        view=SignupView.as_view(),
+    url(regex=r'^signup/$',
+        view=RegisterView.as_view(),
         name="signup"
         ),
 ]

@@ -4,7 +4,7 @@ from services.models import Topic, Comment, UpVoteTopic
 from users.models import User
 
 
-def create_user():
+def create_user(save=False):
 
     # we check if the user exists first
     # if it does exist, we return the user object
@@ -25,8 +25,12 @@ def create_user():
     )
 
     new_user.set_password("password")
-    new_user.save()
+
+    if save:
+        new_user.save()
+
     return new_user
+
 
 def create_users():
     for i in range(10):
@@ -53,7 +57,7 @@ def string_generator(size=6, chars=string.ascii_lowercase +
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-def create_topic(user):
+def create_topic(user, save=False):
     random_title = string_generator(size=100)
     random_text = string_generator(size=300)
     random_url = "https://" + string_generator(size=20, chars=string.ascii_lowercase +
@@ -64,11 +68,13 @@ def create_topic(user):
                   url=random_url,
                   user=user
                   )
+    if save:
+        topic.save()
 
     return topic
 
 
-def create_comment(topic, user):
+def create_comment(topic, user, save=False):
     content = string_generator(size=300)
     media = "https://" + string_generator(size=20, chars=string.ascii_lowercase +
                                                               string.digits) + ".com/"
@@ -79,10 +85,13 @@ def create_comment(topic, user):
                       topic=topic,
                       )
 
+    if save:
+        comment.save()
+
     return comment
 
 
-def create_reply(comment, user):
+def create_reply(comment, user, save=False):
     content = string_generator(size=300)
     media = "https://" + string_generator(size=20) + ".com/"
 
@@ -92,6 +101,9 @@ def create_reply(comment, user):
                     topic=comment.topic,
                     parent=comment,
                     )
+
+    if save:
+        reply.save()
 
     return reply
 
